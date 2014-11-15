@@ -1,4 +1,4 @@
 # Ignore sub-directories:
-/bin
-/obj
-/Properties
+bin/
+obj/
+Properties/
