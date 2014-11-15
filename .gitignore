@@ -6,3 +6,4 @@ Properties/
 # Ignore Visual Studio files.
 *.suo
 *.sln
+*.csproj
