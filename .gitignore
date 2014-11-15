@@ -2,3 +2,6 @@
 bin/
 obj/
 Properties/
+
+# Stupid User options file...
+.suo
