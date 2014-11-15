@@ -3,5 +3,6 @@ bin/
 obj/
 Properties/
 
-# Stupid User options file...
+# Ignore Visual Studio files.
 .suo
+.sln
