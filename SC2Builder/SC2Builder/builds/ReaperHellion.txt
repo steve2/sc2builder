@@ -1,0 +1,11 @@
+Reaper into Hellion
+Terran-Zerg
+{supply}10-{depot}Supply Depot
+{supply}12-{barracks}Barracks
+{supply}12-{refinery}Refinery
+{supply}15-{orbital}Orbital Command
+{supply}15-{reaper}Reaper
+{supply}17-{depot}2nd Supply Depot
+{supply}17-{reaper}2nd Reaper
+{supply}19-{commandcenter}Command Center
+{supply}21-{factory}Factory + {reactor}Reactor on Barracks

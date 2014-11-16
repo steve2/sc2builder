@@ -1,0 +1,6 @@
+CC-First into Reactor Hellion
+Terran-Zerg
+{supply}10-{depot}Supply Depot
+{supply}14-{commandcenter}2nd Command Center
+{supply}15-{barracks}Barracks
+{supply}16-{refinery}Refinery
