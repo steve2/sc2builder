@@ -9,7 +9,9 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Diagnostics;
 using System.IO;
+
 using SC2Builder.Presentation;
+using SC2Builder.Logic;
 
 namespace SC2Builder
 {
@@ -21,6 +23,10 @@ namespace SC2Builder
          *  - Gateway for UI interaction with backend systems.
          * 
          *******************************************************************************/
+
+        public const string DUPLICATES_ERROR = "Error: Build already exists with this name.";
+        public const string SELECTION_ERROR = "Error: No build is currently selected.";
+        public const string INVALID_ERROR = "Error: Build contains invalid information.";
 
         private List<Build> loadedBuildOrders;
         private Build selectedBuild;
@@ -53,10 +59,9 @@ namespace SC2Builder
             foreach (Build B in loadedBuildOrders)
             {
                 ListViewItem buildItem = new ListViewItem(B.Name);
-                string[] split = B.MatchUp.Split('-');
 
-                buildItem.SubItems.Add(split[0]);
-                buildItem.SubItems.Add("vs. " + split[1]);
+                buildItem.SubItems.Add(B.Race);
+                buildItem.SubItems.Add("vs. " + B.Versus);
 
                 buildItem.ImageIndex = 21;
                 BuildList.Items.Add(buildItem);
@@ -77,6 +82,35 @@ namespace SC2Builder
             }
         }
 
+        private void ClearBuildEditor()
+        {
+            RaceBox.SelectedIndex = -1;
+            MatchupBox.SelectedIndex = -1;
+            NameBox.Text = null;
+        }
+
+        private void PopulateBuildEditor()
+        {
+            if (selectedBuild != null)
+            {
+                if (selectedBuild.Race.Equals("Terran"))
+                    RaceBox.SelectedIndex = 0;
+                else if (selectedBuild.Race.Equals("Protoss"))
+                    RaceBox.SelectedIndex = 1;
+                else if (selectedBuild.Race.Equals("Zerg"))
+                    RaceBox.SelectedIndex = 2;
+
+                if (selectedBuild.Versus.Equals("Terran"))
+                    MatchupBox.SelectedIndex = 0;
+                else if (selectedBuild.Versus.Equals("Protoss"))
+                    MatchupBox.SelectedIndex = 1;
+                else if (selectedBuild.Versus.Equals("Zerg"))
+                    MatchupBox.SelectedIndex = 2;
+
+                NameBox.Text = selectedBuild.Name;
+            }
+        }
+
         /*******************************************************************************
          * On Load
          * 
@@ -86,20 +120,75 @@ namespace SC2Builder
          *******************************************************************************/
         private void MainWindow_Load(object sender, EventArgs e)
         {
-            string[] sFilePaths;
-            Build bRead;
-
-            sFilePaths = Directory.GetFiles(AppPath.GetBuilds());
-            foreach (string sF in sFilePaths)
-            {
-                bRead = BuildReader.ReadFromFile(sF);
-                if (bRead != null)
-                {
-                    loadedBuildOrders.Add(bRead);
-                }
-            }
-
+            loadedBuildOrders = BuildReader.ReadFromBuildDirectory();
             PopulateBuildList();
+        }
+
+        /*******************************************************************************
+         * Create Build
+         * 
+         *  - Saves current information into a new file in the 'builds' directory.
+         * 
+         *******************************************************************************/
+        private bool CheckDuplicateBuildNames(string buildName)
+        {
+            foreach (Build B in loadedBuildOrders)
+            {
+                if (B.Name.Equals(buildName))
+                    return false;
+            }
+            return true;
+        }
+
+        private bool ValidateBuildInputs(string name, string race, string match)
+        {
+            bool bNameCondition = (name != null && !name.Trim().Equals(""));
+            bool bRaceCondition = (race.Equals("Terran") || race.Equals("Protoss") || race.Equals("Zerg"));
+            bool bMatchCondition = (match.Equals("Terran") || match.Equals("Protoss") || match.Equals("Zerg"));
+
+            return bNameCondition && bRaceCondition && bMatchCondition;
+        }
+
+        private void CreateBuild_Click(object sender, EventArgs e)
+        {
+            string sBuildName = NameBox.Text;
+            string sBuildRace = RaceBox.Text;
+            string sBuildMatchup = MatchupBox.Text;
+            sBuildMatchup = sBuildMatchup.Replace("-vs- ", null);
+
+            if (ValidateBuildInputs(sBuildName, sBuildRace, sBuildMatchup))
+            {
+                if (CheckDuplicateBuildNames(sBuildName))
+                    BuildWriter.WriteToFile(new Build(sBuildName, sBuildRace + "-" + sBuildMatchup, new List<Step>(), sBuildName + ".txt"));
+                else
+                    MessageBox.Show(DUPLICATES_ERROR, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            else
+                MessageBox.Show(INVALID_ERROR, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+
+
+            loadedBuildOrders = BuildReader.ReadFromBuildDirectory();
+            PopulateBuildList();
+        }
+
+        /*******************************************************************************
+         * Delete Build File
+         * 
+         *  - Deletes selected Build from "builds" directory and list.
+         * 
+         *******************************************************************************/
+        private void DeleteBuild_Click(object sender, EventArgs e)
+        {
+            if (selectedBuild != null)
+            {
+                ClearBuildEditor();
+                File.Delete(selectedBuild.Filepath);
+
+                loadedBuildOrders = BuildReader.ReadFromBuildDirectory();
+                PopulateBuildList();
+            }
+            else
+                MessageBox.Show(SELECTION_ERROR, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
 
         /*******************************************************************************
@@ -137,7 +226,10 @@ namespace SC2Builder
                     if (B.Equals(selected[0].Text))
                     {
                         this.selectedBuild = B;
+
                         PopulateStepList();
+                        PopulateBuildEditor();
+
                         break;
                     }
                 }
@@ -153,6 +245,7 @@ namespace SC2Builder
         private void BuildList_ColumnWidthChanging(object sender, ColumnWidthChangingEventArgs e)
         {
             e.Cancel = true;
+            e.NewWidth = BuildList.Columns[e.ColumnIndex].Width;
         }
     }
 }

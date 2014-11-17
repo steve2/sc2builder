@@ -9,13 +9,19 @@ namespace SC2Builder
     class Build
     {
         private string sName;
-        private string sMatchup;
+        private string sRace;
+        private string sVersus;
+        private string sFilename;
         private List<Step> steps;
 
-        public Build(string name, string matchup, List<Step> steps)
+        public Build(string name, string matchup, List<Step> steps, string filename)
         {
+            string[] split = matchup.Split('-');
+
             this.sName = name;
-            this.sMatchup = matchup;
+            this.sRace = split[0];
+            this.sVersus = split[1];
+            this.sFilename = filename;
             this.steps = new List<Step>(steps);
         }
 
@@ -34,6 +40,14 @@ namespace SC2Builder
             return this.sName.Equals(str);
         }
 
+        public string Filepath
+        {
+            get
+            {
+                return sFilename;
+            }
+        }
+
         public string Name
         {
             get
@@ -42,11 +56,19 @@ namespace SC2Builder
             }
         }
 
-        public string MatchUp
+        public string Race
         {
             get
             {
-                return sMatchup;
+                return sRace;
+            }
+        }
+
+        public string Versus
+        {
+            get
+            {
+                return sVersus;
             }
         }
 
@@ -60,7 +82,7 @@ namespace SC2Builder
 
         public override string ToString()
         {
-            string result = this.sName + "\n" + this.sMatchup + "\n";
+            string result = this.sName + "\n" + this.sRace + " -vs- " + this.sVersus + "\n";
             foreach (Step S in this.steps)
             {
                 result += S.ToString() + "\n";

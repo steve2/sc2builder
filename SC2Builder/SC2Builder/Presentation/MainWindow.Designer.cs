@@ -47,20 +47,33 @@
             this.columnHeader3 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.label1 = new System.Windows.Forms.Label();
+            this.RaceBox = new System.Windows.Forms.ComboBox();
+            this.MatchupBox = new System.Windows.Forms.ComboBox();
+            this.label2 = new System.Windows.Forms.Label();
+            this.directorySearcher1 = new System.DirectoryServices.DirectorySearcher();
+            this.NameBox = new System.Windows.Forms.TextBox();
+            this.label3 = new System.Windows.Forms.Label();
+            this.CreateBuild = new System.Windows.Forms.Button();
+            this.UpdateBuild = new System.Windows.Forms.Button();
+            this.DeleteBuild = new System.Windows.Forms.Button();
             this.FileMenu.SuspendLayout();
             this.groupBox1.SuspendLayout();
+            this.groupBox2.SuspendLayout();
             this.SuspendLayout();
             // 
             // FileMenu
             // 
+            this.FileMenu.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.FileMenu.Dock = System.Windows.Forms.DockStyle.None;
             this.FileMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.fileToolStripMenuItem,
             this.editToolStripMenuItem,
             this.helpToolStripMenuItem});
-            this.FileMenu.Location = new System.Drawing.Point(0, 0);
+            this.FileMenu.Location = new System.Drawing.Point(-3, 2);
             this.FileMenu.Name = "FileMenu";
             this.FileMenu.Padding = new System.Windows.Forms.Padding(7, 2, 0, 2);
-            this.FileMenu.Size = new System.Drawing.Size(870, 24);
+            this.FileMenu.Size = new System.Drawing.Size(129, 24);
             this.FileMenu.TabIndex = 1;
             this.FileMenu.Text = "menuStrip1";
             // 
@@ -126,11 +139,11 @@
             this.StepList.GridLines = true;
             this.StepList.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
             this.StepList.LabelWrap = false;
-            this.StepList.Location = new System.Drawing.Point(331, 24);
+            this.StepList.Location = new System.Drawing.Point(336, 24);
             this.StepList.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.StepList.MultiSelect = false;
             this.StepList.Name = "StepList";
-            this.StepList.Size = new System.Drawing.Size(210, 295);
+            this.StepList.Size = new System.Drawing.Size(215, 295);
             this.StepList.SmallImageList = this.imageList1;
             this.StepList.TabIndex = 3;
             this.StepList.TileSize = new System.Drawing.Size(1, 1);
@@ -428,7 +441,7 @@
             this.columnHeader1,
             this.columnHeader2,
             this.columnHeader3});
-            this.BuildList.Font = new System.Drawing.Font("Calibri Light", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.BuildList.Font = new System.Drawing.Font("Calibri Light", 8.75F);
             this.BuildList.FullRowSelect = true;
             this.BuildList.GridLines = true;
             this.BuildList.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
@@ -437,7 +450,7 @@
             this.BuildList.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.BuildList.MultiSelect = false;
             this.BuildList.Name = "BuildList";
-            this.BuildList.Size = new System.Drawing.Size(316, 295);
+            this.BuildList.Size = new System.Drawing.Size(321, 295);
             this.BuildList.SmallImageList = this.imageList1;
             this.BuildList.TabIndex = 4;
             this.BuildList.TileSize = new System.Drawing.Size(1, 1);
@@ -454,7 +467,7 @@
             // columnHeader2
             // 
             this.columnHeader2.Text = "Race";
-            this.columnHeader2.Width = 54;
+            this.columnHeader2.Width = 59;
             // 
             // columnHeader3
             // 
@@ -463,32 +476,157 @@
             // 
             // groupBox1
             // 
+            this.groupBox1.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.groupBox1.Controls.Add(this.StepList);
             this.groupBox1.Controls.Add(this.BuildList);
-            this.groupBox1.Font = new System.Drawing.Font("Calibri Light", 9.25F);
-            this.groupBox1.Location = new System.Drawing.Point(11, 23);
+            this.groupBox1.Font = new System.Drawing.Font("Calibri Light", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.groupBox1.Location = new System.Drawing.Point(9, 29);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(548, 327);
+            this.groupBox1.Size = new System.Drawing.Size(558, 326);
             this.groupBox1.TabIndex = 5;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Build Previewer";
             // 
             // groupBox2
             // 
-            this.groupBox2.Font = new System.Drawing.Font("Calibri Light", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.groupBox2.Location = new System.Drawing.Point(565, 23);
+            this.groupBox2.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.groupBox2.Controls.Add(this.DeleteBuild);
+            this.groupBox2.Controls.Add(this.UpdateBuild);
+            this.groupBox2.Controls.Add(this.CreateBuild);
+            this.groupBox2.Controls.Add(this.label3);
+            this.groupBox2.Controls.Add(this.NameBox);
+            this.groupBox2.Controls.Add(this.MatchupBox);
+            this.groupBox2.Controls.Add(this.RaceBox);
+            this.groupBox2.Controls.Add(this.label2);
+            this.groupBox2.Controls.Add(this.label1);
+            this.groupBox2.Font = new System.Drawing.Font("Calibri Light", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.groupBox2.Location = new System.Drawing.Point(573, 28);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(293, 464);
+            this.groupBox2.Size = new System.Drawing.Size(228, 460);
             this.groupBox2.TabIndex = 6;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Build Editor";
+            // 
+            // label1
+            // 
+            this.label1.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.label1.AutoSize = true;
+            this.label1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.label1.Font = new System.Drawing.Font("Calibri Light", 8.75F);
+            this.label1.Location = new System.Drawing.Point(26, 31);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(32, 16);
+            this.label1.TabIndex = 0;
+            this.label1.Text = "Race";
+            // 
+            // RaceBox
+            // 
+            this.RaceBox.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.RaceBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.RaceBox.FlatStyle = System.Windows.Forms.FlatStyle.System;
+            this.RaceBox.Font = new System.Drawing.Font("Calibri Light", 8.75F);
+            this.RaceBox.FormattingEnabled = true;
+            this.RaceBox.Items.AddRange(new object[] {
+            "Terran",
+            "Protoss",
+            "Zerg"});
+            this.RaceBox.Location = new System.Drawing.Point(64, 28);
+            this.RaceBox.Name = "RaceBox";
+            this.RaceBox.Size = new System.Drawing.Size(158, 22);
+            this.RaceBox.TabIndex = 1;
+            // 
+            // MatchupBox
+            // 
+            this.MatchupBox.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.MatchupBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.MatchupBox.Font = new System.Drawing.Font("Calibri Light", 8.75F);
+            this.MatchupBox.FormattingEnabled = true;
+            this.MatchupBox.Items.AddRange(new object[] {
+            "-vs- Terran",
+            "-vs- Protoss",
+            "-vs- Zerg"});
+            this.MatchupBox.Location = new System.Drawing.Point(64, 56);
+            this.MatchupBox.Name = "MatchupBox";
+            this.MatchupBox.Size = new System.Drawing.Size(158, 22);
+            this.MatchupBox.TabIndex = 2;
+            // 
+            // label2
+            // 
+            this.label2.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.label2.AutoSize = true;
+            this.label2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.label2.Font = new System.Drawing.Font("Calibri Light", 8.75F);
+            this.label2.Location = new System.Drawing.Point(6, 59);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(52, 16);
+            this.label2.TabIndex = 3;
+            this.label2.Text = "Matchup";
+            // 
+            // directorySearcher1
+            // 
+            this.directorySearcher1.ClientTimeout = System.TimeSpan.Parse("-00:00:01");
+            this.directorySearcher1.ServerPageTimeLimit = System.TimeSpan.Parse("-00:00:01");
+            this.directorySearcher1.ServerTimeLimit = System.TimeSpan.Parse("-00:00:01");
+            // 
+            // NameBox
+            // 
+            this.NameBox.Font = new System.Drawing.Font("Calibri Light", 8.75F);
+            this.NameBox.Location = new System.Drawing.Point(64, 84);
+            this.NameBox.Name = "NameBox";
+            this.NameBox.Size = new System.Drawing.Size(158, 22);
+            this.NameBox.TabIndex = 4;
+            // 
+            // label3
+            // 
+            this.label3.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.label3.AutoSize = true;
+            this.label3.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.label3.Font = new System.Drawing.Font("Calibri Light", 8.75F);
+            this.label3.Location = new System.Drawing.Point(19, 87);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(39, 16);
+            this.label3.TabIndex = 5;
+            this.label3.Text = "Name";
+            // 
+            // CreateBuild
+            // 
+            this.CreateBuild.Font = new System.Drawing.Font("Calibri Light", 8.75F);
+            this.CreateBuild.Location = new System.Drawing.Point(6, 349);
+            this.CreateBuild.Name = "CreateBuild";
+            this.CreateBuild.Size = new System.Drawing.Size(216, 31);
+            this.CreateBuild.TabIndex = 6;
+            this.CreateBuild.Text = "Create Build";
+            this.CreateBuild.UseVisualStyleBackColor = true;
+            this.CreateBuild.Click += new System.EventHandler(this.CreateBuild_Click);
+            // 
+            // UpdateBuild
+            // 
+            this.UpdateBuild.Font = new System.Drawing.Font("Calibri Light", 8.75F);
+            this.UpdateBuild.Location = new System.Drawing.Point(6, 386);
+            this.UpdateBuild.Name = "UpdateBuild";
+            this.UpdateBuild.Size = new System.Drawing.Size(216, 31);
+            this.UpdateBuild.TabIndex = 7;
+            this.UpdateBuild.Text = "Update";
+            this.UpdateBuild.UseVisualStyleBackColor = true;
+            // 
+            // DeleteBuild
+            // 
+            this.DeleteBuild.Font = new System.Drawing.Font("Calibri Light", 8.75F);
+            this.DeleteBuild.Location = new System.Drawing.Point(6, 423);
+            this.DeleteBuild.Name = "DeleteBuild";
+            this.DeleteBuild.Size = new System.Drawing.Size(216, 31);
+            this.DeleteBuild.TabIndex = 8;
+            this.DeleteBuild.Text = "Delete";
+            this.DeleteBuild.UseVisualStyleBackColor = true;
+            this.DeleteBuild.Click += new System.EventHandler(this.DeleteBuild_Click);
             // 
             // MainWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 18F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.BackColor = System.Drawing.SystemColors.Control;
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
-            this.ClientSize = new System.Drawing.Size(870, 499);
+            this.ClientSize = new System.Drawing.Size(809, 499);
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.FileMenu);
             this.Controls.Add(this.groupBox1);
@@ -506,6 +644,8 @@
             this.FileMenu.ResumeLayout(false);
             this.FileMenu.PerformLayout();
             this.groupBox1.ResumeLayout(false);
+            this.groupBox2.ResumeLayout(false);
+            this.groupBox2.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -530,6 +670,16 @@
         private System.Windows.Forms.ColumnHeader columnHeader3;
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.GroupBox groupBox2;
+        private System.Windows.Forms.ComboBox RaceBox;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.ComboBox MatchupBox;
+        private System.Windows.Forms.Label label2;
+        private System.DirectoryServices.DirectorySearcher directorySearcher1;
+        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.TextBox NameBox;
+        private System.Windows.Forms.Button UpdateBuild;
+        private System.Windows.Forms.Button CreateBuild;
+        private System.Windows.Forms.Button DeleteBuild;
 
     }
 }

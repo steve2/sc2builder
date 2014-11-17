@@ -18,7 +18,7 @@ namespace SC2Builder
             string buildName;
             string buildMatchup;
 
-            System.IO.StreamReader filereader = new System.IO.StreamReader(filename);
+            StreamReader filereader = new StreamReader(filename);
 
             buildName = filereader.ReadLine();
             buildMatchup = filereader.ReadLine();
@@ -32,11 +32,25 @@ namespace SC2Builder
             while ((line = filereader.ReadLine()) != null)
             {
                 lineSplit = line.Split('-');
-
                 buildStep = new Step(lineSplit[0], lineSplit[1]);
                 buildSteps.Add(buildStep);
             }
-            return new Build(buildName, buildMatchup, buildSteps);
+            filereader.Close();
+            return new Build(buildName, buildMatchup, buildSteps, filename);
+        }
+
+        public static List<Build> ReadFromBuildDirectory()
+        {
+            List<Build> buildList = new List<Build>();
+            Build temp;
+            string[] paths = Directory.GetFiles(AppPath.GetBuilds());
+
+            foreach (string p in paths)
+            {
+                temp = ReadFromFile(p);
+                if (temp != null) buildList.Add(temp);
+            }
+            return buildList;
         }
     }
 }
