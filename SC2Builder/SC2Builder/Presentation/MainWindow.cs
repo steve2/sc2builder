@@ -371,7 +371,8 @@ namespace SC2Builder
 		 *	Create Build 
 		 *
 		 ************************************************************************************************************/
-		private void CreateBuild_Click(object sender, EventArgs e)
+
+		private void CreateBuildFromEditor()
 		{
 			EditorContents editContent = new EditorContents(NameBox.Text, RaceBox.Text, MatchupBox.Text.Replace("-vs-", null), BuildSpecTextBox.Text);
 
@@ -390,12 +391,22 @@ namespace SC2Builder
 				MessageBox.Show(INVALID_ERROR, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
 		}
 
+		private void CreateBuild_Click(object sender, EventArgs e)
+		{
+			CreateBuildFromEditor();
+		}
+
+		private void createToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			CreateBuildFromEditor();
+		}
+
 		/************************************************************************************************************
 		 *
 		 *	Update Selected Build 
 		 *
 		 ************************************************************************************************************/
-		private void UpdateBuild_Click(object sender, EventArgs e)
+		private void UpdateSelectedBuild()
 		{
 			EditorContents editContent = new EditorContents(NameBox.Text, RaceBox.Text, MatchupBox.Text.Replace("-vs-", null), BuildSpecTextBox.Text);
 
@@ -410,12 +421,22 @@ namespace SC2Builder
 				MessageBox.Show(INVALID_ERROR, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
 		}
 
+		private void UpdateBuild_Click(object sender, EventArgs e)
+		{
+			UpdateSelectedBuild();
+		}
+
+		private void updateToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			UpdateSelectedBuild();
+		}
+
 		/************************************************************************************************************
 		 *
 		 *	Delete Selected Build
 		 *
 		 ************************************************************************************************************/
-		private void DeleteBuild_Click(object sender, EventArgs e)
+		private void DeleteSelectedBuild()
 		{
 			if (SelectedBuild != null)
 			{
@@ -428,6 +449,16 @@ namespace SC2Builder
 			}
 			else
 				MessageBox.Show(SELECTION_ERROR, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+		}
+
+		private void DeleteBuild_Click(object sender, EventArgs e)
+		{
+			DeleteSelectedBuild();
+		}
+
+		private void deleteToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			DeleteSelectedBuild();
 		}
 
 		/************************************************************************************************************
@@ -483,5 +514,9 @@ namespace SC2Builder
 				ReSelectBuildInList();
 			}
 		}
+
+
+
+
 	}
 }

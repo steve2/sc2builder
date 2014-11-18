@@ -46,6 +46,8 @@
 			this.columnHeader3 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
 			this.BuildPreviewerGroup = new System.Windows.Forms.GroupBox();
 			this.BuildEditorGroup = new System.Windows.Forms.GroupBox();
+			this.label4 = new System.Windows.Forms.Label();
+			this.BuildSpecTextBox = new System.Windows.Forms.RichTextBox();
 			this.DeleteBuild = new System.Windows.Forms.Button();
 			this.UpdateBuild = new System.Windows.Forms.Button();
 			this.CreateBuild = new System.Windows.Forms.Button();
@@ -57,8 +59,10 @@
 			this.label1 = new System.Windows.Forms.Label();
 			this.OpenBuildDialog = new System.DirectoryServices.DirectorySearcher();
 			this.NamingProblem = new System.Windows.Forms.ErrorProvider(this.components);
-			this.BuildSpecTextBox = new System.Windows.Forms.RichTextBox();
-			this.label4 = new System.Windows.Forms.Label();
+			this.createBuildToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.createToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.updateToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.deleteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.FileMenu.SuspendLayout();
 			this.BuildPreviewerGroup.SuspendLayout();
 			this.BuildEditorGroup.SuspendLayout();
@@ -87,40 +91,43 @@
             this.ExitToolStripMenuItem});
 			this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
 			this.fileToolStripMenuItem.Size = new System.Drawing.Size(37, 20);
-			this.fileToolStripMenuItem.Text = "File";
+			this.fileToolStripMenuItem.Text = "&File";
 			// 
 			// LoadToolStripMenuItem
 			// 
 			this.LoadToolStripMenuItem.Name = "LoadToolStripMenuItem";
-			this.LoadToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.D)));
-			this.LoadToolStripMenuItem.Size = new System.Drawing.Size(202, 22);
-			this.LoadToolStripMenuItem.Text = "Load Build File...";
+			this.LoadToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.L)));
+			this.LoadToolStripMenuItem.Size = new System.Drawing.Size(200, 22);
+			this.LoadToolStripMenuItem.Text = "&Load Build File...";
 			this.LoadToolStripMenuItem.Click += new System.EventHandler(this.LoadToolStripMenuItem_Click);
 			// 
 			// toolStripMenuItem2
 			// 
 			this.toolStripMenuItem2.Name = "toolStripMenuItem2";
-			this.toolStripMenuItem2.Size = new System.Drawing.Size(199, 6);
+			this.toolStripMenuItem2.Size = new System.Drawing.Size(197, 6);
 			// 
 			// ExitToolStripMenuItem
 			// 
+			this.ExitToolStripMenuItem.ImageAlign = System.Drawing.ContentAlignment.BottomCenter;
 			this.ExitToolStripMenuItem.Name = "ExitToolStripMenuItem";
 			this.ExitToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.X)));
-			this.ExitToolStripMenuItem.Size = new System.Drawing.Size(202, 22);
-			this.ExitToolStripMenuItem.Text = "Exit";
+			this.ExitToolStripMenuItem.Size = new System.Drawing.Size(200, 22);
+			this.ExitToolStripMenuItem.Text = "&Exit";
 			this.ExitToolStripMenuItem.Click += new System.EventHandler(this.ExitToolStripMenuItem_Click);
 			// 
 			// editToolStripMenuItem
 			// 
+			this.editToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.createBuildToolStripMenuItem});
 			this.editToolStripMenuItem.Name = "editToolStripMenuItem";
 			this.editToolStripMenuItem.Size = new System.Drawing.Size(39, 20);
-			this.editToolStripMenuItem.Text = "Edit";
+			this.editToolStripMenuItem.Text = "&Edit";
 			// 
 			// helpToolStripMenuItem
 			// 
 			this.helpToolStripMenuItem.Name = "helpToolStripMenuItem";
 			this.helpToolStripMenuItem.Size = new System.Drawing.Size(44, 20);
-			this.helpToolStripMenuItem.Text = "Help";
+			this.helpToolStripMenuItem.Text = "&Help";
 			// 
 			// StepList
 			// 
@@ -248,6 +255,30 @@
 			this.BuildEditorGroup.TabIndex = 6;
 			this.BuildEditorGroup.TabStop = false;
 			this.BuildEditorGroup.Text = "Build Editor";
+			// 
+			// label4
+			// 
+			this.label4.AutoSize = true;
+			this.label4.Font = new System.Drawing.Font("Calibri Light", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.label4.Location = new System.Drawing.Point(6, 121);
+			this.label4.Name = "label4";
+			this.label4.Size = new System.Drawing.Size(98, 14);
+			this.label4.TabIndex = 10;
+			this.label4.Text = "Build Specification:";
+			// 
+			// BuildSpecTextBox
+			// 
+			this.BuildSpecTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+			this.BuildSpecTextBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+			this.BuildSpecTextBox.Font = new System.Drawing.Font("Calibri Light", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.BuildSpecTextBox.Location = new System.Drawing.Point(6, 142);
+			this.BuildSpecTextBox.Name = "BuildSpecTextBox";
+			this.BuildSpecTextBox.Size = new System.Drawing.Size(203, 238);
+			this.BuildSpecTextBox.TabIndex = 5;
+			this.BuildSpecTextBox.Text = "";
+			this.BuildSpecTextBox.WordWrap = false;
 			// 
 			// DeleteBuild
 			// 
@@ -383,29 +414,39 @@
 			// 
 			this.NamingProblem.ContainerControl = this;
 			// 
-			// BuildSpecTextBox
+			// createBuildToolStripMenuItem
 			// 
-			this.BuildSpecTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-			this.BuildSpecTextBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-			this.BuildSpecTextBox.Font = new System.Drawing.Font("Calibri Light", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.BuildSpecTextBox.Location = new System.Drawing.Point(6, 142);
-			this.BuildSpecTextBox.Name = "BuildSpecTextBox";
-			this.BuildSpecTextBox.Size = new System.Drawing.Size(203, 238);
-			this.BuildSpecTextBox.TabIndex = 5;
-			this.BuildSpecTextBox.Text = "";
-			this.BuildSpecTextBox.WordWrap = false;
+			this.createBuildToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.createToolStripMenuItem,
+            this.updateToolStripMenuItem,
+            this.deleteToolStripMenuItem});
+			this.createBuildToolStripMenuItem.Name = "createBuildToolStripMenuItem";
+			this.createBuildToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+			this.createBuildToolStripMenuItem.Text = "&Build";
 			// 
-			// label4
+			// createToolStripMenuItem
 			// 
-			this.label4.AutoSize = true;
-			this.label4.Font = new System.Drawing.Font("Calibri Light", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.label4.Location = new System.Drawing.Point(6, 121);
-			this.label4.Name = "label4";
-			this.label4.Size = new System.Drawing.Size(98, 14);
-			this.label4.TabIndex = 10;
-			this.label4.Text = "Build Specification:";
+			this.createToolStripMenuItem.Name = "createToolStripMenuItem";
+			this.createToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.C)));
+			this.createToolStripMenuItem.Size = new System.Drawing.Size(154, 22);
+			this.createToolStripMenuItem.Text = "&Create";
+			this.createToolStripMenuItem.Click += new System.EventHandler(this.createToolStripMenuItem_Click);
+			// 
+			// updateToolStripMenuItem
+			// 
+			this.updateToolStripMenuItem.Name = "updateToolStripMenuItem";
+			this.updateToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.U)));
+			this.updateToolStripMenuItem.Size = new System.Drawing.Size(154, 22);
+			this.updateToolStripMenuItem.Text = "&Update";
+			this.updateToolStripMenuItem.Click += new System.EventHandler(this.updateToolStripMenuItem_Click);
+			// 
+			// deleteToolStripMenuItem
+			// 
+			this.deleteToolStripMenuItem.Name = "deleteToolStripMenuItem";
+			this.deleteToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.D)));
+			this.deleteToolStripMenuItem.Size = new System.Drawing.Size(154, 22);
+			this.deleteToolStripMenuItem.Text = "&Delete";
+			this.deleteToolStripMenuItem.Click += new System.EventHandler(this.deleteToolStripMenuItem_Click);
 			// 
 			// MainWindow
 			// 
@@ -471,6 +512,10 @@
         private System.Windows.Forms.ErrorProvider NamingProblem;
 				private System.Windows.Forms.Label label4;
 				private System.Windows.Forms.RichTextBox BuildSpecTextBox;
+				private System.Windows.Forms.ToolStripMenuItem createBuildToolStripMenuItem;
+				private System.Windows.Forms.ToolStripMenuItem createToolStripMenuItem;
+				private System.Windows.Forms.ToolStripMenuItem updateToolStripMenuItem;
+				private System.Windows.Forms.ToolStripMenuItem deleteToolStripMenuItem;
 
     }
 }
