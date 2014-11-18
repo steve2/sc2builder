@@ -7,18 +7,23 @@ using System.IO;
 
 namespace SC2Builder.Logic
 {
-    class BuildWriter
-    {
-        public static bool WriteToFile(Build toWrite)
-        {
-            string fullPath = Path.Combine(AppPath.GetBuilds(), toWrite.Filepath);
-            StreamWriter filewriter = new StreamWriter(fullPath);
+	class BuildWriter
+	{
+		public static bool WriteToFile(Build toWrite)
+		{
+			string fullPath = Path.Combine(AppPath.GetBuilds(), Path.GetFileName(toWrite.Filepath));
+			StreamWriter filewriter = new StreamWriter(fullPath);
 
-            filewriter.WriteLine(toWrite.Name);
-            filewriter.WriteLine(toWrite.Race + "-" + toWrite.Versus);
+			Console.WriteLine(fullPath);
 
-            filewriter.Close();
-            return true;
-        }
-    }
+			filewriter.WriteLine(toWrite.Name);
+			filewriter.WriteLine(toWrite.Race + "-" + toWrite.Versus);
+			foreach (Step S in toWrite.Steps)
+			{
+				filewriter.WriteLine(S.RawString());
+			}
+			filewriter.Close();
+			return true;
+		}
+	}
 }

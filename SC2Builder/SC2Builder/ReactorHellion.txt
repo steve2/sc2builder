@@ -1,0 +1,7 @@
+CC-First into Reactor Hellion
+Terran-Zerg
+10-Supply Depot
+14-Command Center
+15-Barracks
+16-Refinery
+18-Halt SCV Production

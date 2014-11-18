@@ -10,16 +10,16 @@ using System.Windows.Forms;
 
 namespace SC2Builder.Presentation
 {
-    public partial class SplashWindow : Form
-    {
-        public SplashWindow()
-        {
-            InitializeComponent();
-        }
+	public partial class SplashWindow : Form
+	{
+		public SplashWindow()
+		{
+			InitializeComponent();
+		}
 
-        private void timer1_Tick(object sender, EventArgs e)
-        {
-            this.Close();
-        }
-    }
+		private void timer1_Tick(object sender, EventArgs e)
+		{
+			this.Close();
+		}
+	}
 }

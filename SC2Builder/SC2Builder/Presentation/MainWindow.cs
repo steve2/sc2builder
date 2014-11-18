@@ -12,240 +12,476 @@ using System.IO;
 
 using SC2Builder.Presentation;
 using SC2Builder.Logic;
+using SC2Builder.Model;
 
 namespace SC2Builder
 {
-    public partial class MainWindow : Form
-    {
-        /*******************************************************************************
-         * Main Application Window
-         * 
-         *  - Gateway for UI interaction with backend systems.
-         * 
-         *******************************************************************************/
+	public partial class MainWindow : Form
+	{
 
-        public const string DUPLICATES_ERROR = "Error: Build already exists with this name.";
-        public const string SELECTION_ERROR = "Error: No build is currently selected.";
-        public const string INVALID_ERROR = "Error: Build contains invalid information.";
+		public const string DUPLICATES_ERROR = "Error: Build already exists with this name.";
+		public const string SELECTION_ERROR = "Error: No build is currently selected.";
+		public const string INVALID_ERROR = "Error: Build contains invalid information.";
 
-        private List<Build> loadedBuildOrders;
-        private Build selectedBuild;
+		public const string TERRAN = "Terran";
+		public const string PROTOSS = "Protoss";
+		public const string ZERG = "Zerg";
 
-        public MainWindow()
-        {
-            loadedBuildOrders = new List<Build>();
-            selectedBuild = null;
+		public Dictionary<String, int> imageLookupTable;
 
-            SplashWindow splashScreen = new SplashWindow();
-            Application.Run(splashScreen);
+		private List<Build> LoadedBuildOrders;
+		private Build SelectedBuild;
+		private bool bBuildListSortedByRace;
+		private bool bBuildListSortedByMatchup;
 
-            InitializeComponent();
-        }
-
-        private void exitToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            this.Close();
-        }
-
-        /*******************************************************************************
-         * Populate ListView Content
-         * 
-         *  - ListView previews information about build.
-         * 
-         *******************************************************************************/
-        private void PopulateBuildList()
-        {
-            BuildList.Items.Clear();
-            foreach (Build B in loadedBuildOrders)
-            {
-                ListViewItem buildItem = new ListViewItem(B.Name);
-
-                buildItem.SubItems.Add(B.Race);
-                buildItem.SubItems.Add("vs. " + B.Versus);
-
-                buildItem.ImageIndex = 21;
-                BuildList.Items.Add(buildItem);
-            }
-        }
-
-        private void PopulateStepList()
-        {
-            StepList.Items.Clear();
-            if (selectedBuild != null)
-            {
-                foreach (Step S in selectedBuild.Steps)
-                {
-                    ListViewItem stepItem = new ListViewItem(S.ToString());
-                    stepItem.ImageIndex = 33;
-                    StepList.Items.Add(stepItem);
-                }
-            }
-        }
-
-        private void ClearBuildEditor()
-        {
-            RaceBox.SelectedIndex = -1;
-            MatchupBox.SelectedIndex = -1;
-            NameBox.Text = null;
-        }
-
-        private void PopulateBuildEditor()
-        {
-            if (selectedBuild != null)
-            {
-                if (selectedBuild.Race.Equals("Terran"))
-                    RaceBox.SelectedIndex = 0;
-                else if (selectedBuild.Race.Equals("Protoss"))
-                    RaceBox.SelectedIndex = 1;
-                else if (selectedBuild.Race.Equals("Zerg"))
-                    RaceBox.SelectedIndex = 2;
-
-                if (selectedBuild.Versus.Equals("Terran"))
-                    MatchupBox.SelectedIndex = 0;
-                else if (selectedBuild.Versus.Equals("Protoss"))
-                    MatchupBox.SelectedIndex = 1;
-                else if (selectedBuild.Versus.Equals("Zerg"))
-                    MatchupBox.SelectedIndex = 2;
-
-                NameBox.Text = selectedBuild.Name;
-            }
-        }
-
-        /*******************************************************************************
-         * On Load
-         * 
-         *  - Load builds from local file into BuildList ListView component.
-         *  - Load build step information and save builds in memory.
-         * 
-         *******************************************************************************/
-        private void MainWindow_Load(object sender, EventArgs e)
-        {
-            loadedBuildOrders = BuildReader.ReadFromBuildDirectory();
-            PopulateBuildList();
-        }
-
-        /*******************************************************************************
-         * Create Build
-         * 
-         *  - Saves current information into a new file in the 'builds' directory.
-         * 
-         *******************************************************************************/
-        private bool CheckDuplicateBuildNames(string buildName)
-        {
-            foreach (Build B in loadedBuildOrders)
-            {
-                if (B.Name.Equals(buildName))
-                    return false;
-            }
-            return true;
-        }
-
-        private bool ValidateBuildInputs(string name, string race, string match)
-        {
-            bool bNameCondition = (name != null && !name.Trim().Equals(""));
-            bool bRaceCondition = (race.Equals("Terran") || race.Equals("Protoss") || race.Equals("Zerg"));
-            bool bMatchCondition = (match.Equals("Terran") || match.Equals("Protoss") || match.Equals("Zerg"));
-
-            return bNameCondition && bRaceCondition && bMatchCondition;
-        }
-
-        private void CreateBuild_Click(object sender, EventArgs e)
-        {
-            string sBuildName = NameBox.Text;
-            string sBuildRace = RaceBox.Text;
-            string sBuildMatchup = MatchupBox.Text;
-            sBuildMatchup = sBuildMatchup.Replace("-vs- ", null);
-
-            if (ValidateBuildInputs(sBuildName, sBuildRace, sBuildMatchup))
-            {
-                if (CheckDuplicateBuildNames(sBuildName))
-                    BuildWriter.WriteToFile(new Build(sBuildName, sBuildRace + "-" + sBuildMatchup, new List<Step>(), sBuildName + ".txt"));
-                else
-                    MessageBox.Show(DUPLICATES_ERROR, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-            else
-                MessageBox.Show(INVALID_ERROR, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+		private SortBuildsOrder SortByRaceIndex;
+		private SortBuildsOrder SortByMatchupIndex;
 
 
-            loadedBuildOrders = BuildReader.ReadFromBuildDirectory();
-            PopulateBuildList();
-        }
+		/********************************  ********************************/
 
-        /*******************************************************************************
-         * Delete Build File
-         * 
-         *  - Deletes selected Build from "builds" directory and list.
-         * 
-         *******************************************************************************/
-        private void DeleteBuild_Click(object sender, EventArgs e)
-        {
-            if (selectedBuild != null)
-            {
-                ClearBuildEditor();
-                File.Delete(selectedBuild.Filepath);
+		public MainWindow()
+		{
+			imageLookupTable = new Dictionary<string, int>();
+			InitImageLookupTable.Init(imageLookupTable);
 
-                loadedBuildOrders = BuildReader.ReadFromBuildDirectory();
-                PopulateBuildList();
-            }
-            else
-                MessageBox.Show(SELECTION_ERROR, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-        }
+			LoadedBuildOrders = new List<Build>();
+			SelectedBuild = null;
 
-        /*******************************************************************************
-         * Open Build File
-         * 
-         *  - Opens Build.
-         * 
-         *******************************************************************************/
-        private void openToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            OpenFileDialog ofd = new OpenFileDialog();
-            ofd.Filter = "txt files (*.txt)|*.txt";
-            ofd.FilterIndex = 1;
-            if (ofd.ShowDialog() == DialogResult.OK)
-            {
-                MessageBox.Show("You opened the file!", "Open File", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
-            }
-        }
+			bBuildListSortedByRace = false;
+			bBuildListSortedByMatchup = false;
+			SortByRaceIndex = (SortBuildsOrder)0;
+			SortByMatchupIndex = (SortBuildsOrder)0;
 
-        /*******************************************************************************
-         * Build Selection
-         * 
-         *  - Selecting Builds in the ListView will populate Steps ListView.
-         *  
-         *******************************************************************************/
-        private void BuildList_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            ListView.SelectedListViewItemCollection selected = BuildList.SelectedItems;
-            // our ListView only allows 1 item to be selected at any given time.
-            if (selected.Count > 0)
-            {
-                selectedBuild = null;
-                foreach (Build B in loadedBuildOrders)
-                {
-                    if (B.Equals(selected[0].Text))
-                    {
-                        this.selectedBuild = B;
+			SplashWindow splashScreen = new SplashWindow();
+			Application.Run(splashScreen);
 
-                        PopulateStepList();
-                        PopulateBuildEditor();
+			InitializeComponent();
+		}
 
-                        break;
-                    }
-                }
-            }
-        }
 
-        /*******************************************************************************
-         * Prevent Column Resizing in ListViews
-         *  
-         * - Do not want User to potentially lose view of the information.
-         *
-         *******************************************************************************/
-        private void BuildList_ColumnWidthChanging(object sender, ColumnWidthChangingEventArgs e)
-        {
-            e.Cancel = true;
-            e.NewWidth = BuildList.Columns[e.ColumnIndex].Width;
-        }
-    }
+		/******************************** Loading & Exiting ********************************/
+
+		private void MainWindow_Load(object sender, EventArgs e)
+		{
+			LoadedBuildOrders = BuildReader.ReadFromBuildDirectory();
+			PopulateBuildList(LoadedBuildOrders);
+		}
+
+		private void BuildList_ColumnWidthChanging(object sender, ColumnWidthChangingEventArgs e)
+		{
+			e.Cancel = true;
+			e.NewWidth = BuildList.Columns[e.ColumnIndex].Width;
+		}
+
+		private void ExitToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			this.Close();
+		}
+
+		
+		/******************************** Sorting ********************************/
+
+		enum SortBuildsOrder
+		{ /* Enumeration of permutations for Terran/Protoss/Zerg ordering */
+			T_P_Z=0, T_Z_P=1, P_T_Z=2, P_Z_T=3, Z_P_T=4, Z_T_P=5
+		};
+
+		private List<Build> GetBuildsByRace(List<Build> builds, string race)
+		{
+			List<Build> byRace = new List<Build>();
+			foreach (Build B in builds)
+			{
+				if (B.Race.Equals(race))
+					byRace.Add(B);
+			}
+			return byRace;
+		}
+
+		private List<Build> GetBuildsByMatchup(List<Build> builds, string matchup)
+		{
+			List<Build> byMatch = new List<Build>();
+			foreach (Build B in builds)
+			{
+				if (B.Versus.Equals(matchup))
+					byMatch.Add(B);
+			}
+			return byMatch;
+		}
+
+		private List<Build> GetSortedBuildsByRace(List<Build> builds, SortBuildsOrder sortInOrder)
+		{
+			List<Build> sortedBuilds = new List<Build>();
+			switch (sortInOrder)
+			{
+				case SortBuildsOrder.T_P_Z:
+					sortedBuilds.AddRange(GetBuildsByRace(builds, TERRAN));
+					sortedBuilds.AddRange(GetBuildsByRace(builds, PROTOSS));
+					sortedBuilds.AddRange(GetBuildsByRace(builds, ZERG));
+					break;
+				case SortBuildsOrder.T_Z_P:
+					sortedBuilds.AddRange(GetBuildsByRace(builds, TERRAN));
+					sortedBuilds.AddRange(GetBuildsByRace(builds, ZERG));
+					sortedBuilds.AddRange(GetBuildsByRace(builds, PROTOSS));
+					break;
+				case SortBuildsOrder.P_T_Z:
+					sortedBuilds.AddRange(GetBuildsByRace(builds, PROTOSS));
+					sortedBuilds.AddRange(GetBuildsByRace(builds, TERRAN));
+					sortedBuilds.AddRange(GetBuildsByRace(builds, ZERG));
+					break;
+				case SortBuildsOrder.P_Z_T:
+					sortedBuilds.AddRange(GetBuildsByRace(builds, PROTOSS));
+					sortedBuilds.AddRange(GetBuildsByRace(builds, ZERG));
+					sortedBuilds.AddRange(GetBuildsByRace(builds, TERRAN));
+					break;
+				case SortBuildsOrder.Z_T_P:
+					sortedBuilds.AddRange(GetBuildsByRace(builds, ZERG));
+					sortedBuilds.AddRange(GetBuildsByRace(builds, TERRAN));
+					sortedBuilds.AddRange(GetBuildsByRace(builds, PROTOSS));
+					break;
+				case SortBuildsOrder.Z_P_T:
+					sortedBuilds.AddRange(GetBuildsByRace(builds, ZERG));
+					sortedBuilds.AddRange(GetBuildsByRace(builds, PROTOSS));
+					sortedBuilds.AddRange(GetBuildsByRace(builds, TERRAN));
+					break;
+			}
+			return sortedBuilds;
+		}
+
+		private List<Build> GetSortedBuildsByMatchup(List<Build> builds, SortBuildsOrder sortInOrder)
+		{
+			List<Build> sortedBuilds = new List<Build>();
+			switch (sortInOrder)
+			{
+				case SortBuildsOrder.T_P_Z:
+					sortedBuilds.AddRange(GetBuildsByMatchup(builds, TERRAN));
+					sortedBuilds.AddRange(GetBuildsByMatchup(builds, PROTOSS));
+					sortedBuilds.AddRange(GetBuildsByMatchup(builds, ZERG));
+					break;
+				case SortBuildsOrder.T_Z_P:
+					sortedBuilds.AddRange(GetBuildsByMatchup(builds, TERRAN));
+					sortedBuilds.AddRange(GetBuildsByMatchup(builds, ZERG));
+					sortedBuilds.AddRange(GetBuildsByMatchup(builds, PROTOSS));
+					break;
+				case SortBuildsOrder.P_T_Z:
+					sortedBuilds.AddRange(GetBuildsByMatchup(builds, PROTOSS));
+					sortedBuilds.AddRange(GetBuildsByMatchup(builds, TERRAN));
+					sortedBuilds.AddRange(GetBuildsByMatchup(builds, ZERG));
+					break;
+				case SortBuildsOrder.P_Z_T:
+					sortedBuilds.AddRange(GetBuildsByMatchup(builds, PROTOSS));
+					sortedBuilds.AddRange(GetBuildsByMatchup(builds, ZERG));
+					sortedBuilds.AddRange(GetBuildsByMatchup(builds, TERRAN));
+					break;
+				case SortBuildsOrder.Z_T_P:
+					sortedBuilds.AddRange(GetBuildsByMatchup(builds, ZERG));
+					sortedBuilds.AddRange(GetBuildsByMatchup(builds, TERRAN));
+					sortedBuilds.AddRange(GetBuildsByMatchup(builds, PROTOSS));
+					break;
+				case SortBuildsOrder.Z_P_T:
+					sortedBuilds.AddRange(GetBuildsByMatchup(builds, ZERG));
+					sortedBuilds.AddRange(GetBuildsByMatchup(builds, PROTOSS));
+					sortedBuilds.AddRange(GetBuildsByMatchup(builds, TERRAN));
+					break;
+			}
+			return sortedBuilds;
+		}
+
+
+		/******************************** User Interface Utilities ********************************/
+		
+		private void RefreshBuildData()
+		{
+			LoadedBuildOrders = BuildReader.ReadFromBuildDirectory();
+			if (bBuildListSortedByRace)
+			{
+				PopulateBuildList(GetSortedBuildsByRace(LoadedBuildOrders, SortByRaceIndex));
+			}
+			else if (bBuildListSortedByMatchup)
+			{
+				PopulateBuildList(GetSortedBuildsByMatchup(LoadedBuildOrders, SortByMatchupIndex));
+			}
+			else
+			{
+				PopulateBuildList(LoadedBuildOrders);
+			}
+			if (SelectedBuild == null)
+				if (LoadedBuildOrders.Count > 0)
+					SelectedBuild = LoadedBuildOrders[0];
+			PopulateStepList(SelectedBuild);
+			PopulateBuildEditor(SelectedBuild);
+			ReSelectBuildInList();
+			BuildList.Select();
+		}
+
+		/** Can be useful to ReSelect when we sort or perform an operation 
+			that alters the contents of the ListView (of Builds). */
+		private void ReSelectBuildInList()
+		{
+			if (SelectedBuild != null)
+				BuildList.Items[FindBuildInList(SelectedBuild)].Selected = true;
+		}
+
+		private int FindBuildInList(Build build)
+		{
+			int i, stop = BuildList.Items.Count;
+			for (i = 0; i < stop; i++)
+			{
+				if (BuildList.Items[i].Text.Equals(build.Name))
+					return i;
+			}
+			return -1;
+		}
+
+		private void PopulateBuildList(List<Build> builds)
+		{
+			BuildList.Items.Clear();
+			foreach (Build B in builds)
+			{
+				ListViewItem buildItem = new ListViewItem(B.Name);
+				 buildItem.SubItems.Add(B.Race);
+				 buildItem.SubItems.Add("vs. " + B.Versus);
+
+				if (B.Race.Equals(TERRAN))
+					buildItem.ImageIndex = imageLookupTable["icon-terran-small"];
+				else if (B.Race.Equals(PROTOSS))
+					buildItem.ImageIndex = imageLookupTable["icon-protoss-small"];
+				else if (B.Race.Equals(ZERG))
+					buildItem.ImageIndex = imageLookupTable["icon-zerg-small"];
+
+				BuildList.Items.Add(buildItem);
+			}
+		}
+
+		private void PopulateStepList(Build build)
+		{
+			StepList.Items.Clear();
+			if (build != null)
+			{
+				foreach (Step S in build.Steps)
+				{
+					ListViewItem stepItem = new ListViewItem(S.ToString());
+					if (build.Race.Equals(TERRAN))
+						stepItem.ImageIndex = imageLookupTable["icon-terran-supply"];
+					else if (build.Race.Equals(PROTOSS))
+						stepItem.ImageIndex = imageLookupTable["icon-protoss-supply"];
+					else if (build.Race.Equals(ZERG))
+						stepItem.ImageIndex = imageLookupTable["icon-zerg-supply"];
+					StepList.Items.Add(stepItem);
+				}
+			}
+		}
+
+		private void PopulateBuildEditor(Build build)
+		{
+			if (build != null)
+			{
+				if (build.Race.Equals(TERRAN))
+					RaceBox.SelectedIndex = 0;
+				else if (build.Race.Equals(PROTOSS))
+					RaceBox.SelectedIndex = 1;
+				else if (build.Race.Equals(ZERG))
+					RaceBox.SelectedIndex = 2;
+
+				if (build.Versus.Equals(TERRAN))
+					MatchupBox.SelectedIndex = 0;
+				else if (build.Versus.Equals(PROTOSS))
+					MatchupBox.SelectedIndex = 1;
+				else if (build.Versus.Equals(ZERG))
+					MatchupBox.SelectedIndex = 2;
+
+				NameBox.Text = build.Name;
+
+				BuildSpecTextBox.Text = "";
+				foreach (Step S in build.Steps)
+					BuildSpecTextBox.Text = BuildSpecTextBox.Text + (S.RawString()) + "\n";
+			}
+		}
+
+		private void ClearBuildEditor()
+		{
+			RaceBox.SelectedIndex = -1;
+			MatchupBox.SelectedIndex = -1;
+			NameBox.Text = null;
+			BuildSpecTextBox.Text = null;
+		}
+
+
+
+		/******************************** Input Validation ********************************/
+
+		private bool CheckDuplicateBuildNames(string buildName)
+		{
+			foreach (Build B in LoadedBuildOrders)
+			{
+				if (B.Name.Equals(buildName))
+					return false;
+			}
+			return true;
+		}
+
+
+
+
+		/******************************** User Interface Events ********************************/
+
+
+		/************************************************************************************************************
+		 *
+		 *	Sort Builds
+		 *
+		 ************************************************************************************************************/
+		private void BuildList_ColumnClick(object sender, ColumnClickEventArgs e)
+		{
+			const int RACE_COL = 1, MATCH_COL = 2;
+			List<Build> buildsSorted;
+
+			switch (e.Column)
+			{
+				/** Sort Build List By Race **/
+				case RACE_COL:
+					bBuildListSortedByRace = true;
+					bBuildListSortedByMatchup = false;
+
+					buildsSorted = GetSortedBuildsByRace(LoadedBuildOrders, SortByRaceIndex);
+					SortByRaceIndex += 1;
+					if (SortByRaceIndex > SortBuildsOrder.Z_T_P)
+						SortByRaceIndex = SortBuildsOrder.T_P_Z;
+					PopulateBuildList(buildsSorted);
+					ReSelectBuildInList();
+					break;
+
+				/** Sort Build List By Matchup **/
+				case MATCH_COL:
+					bBuildListSortedByMatchup = true;
+					bBuildListSortedByRace = false;
+
+					buildsSorted = GetSortedBuildsByMatchup(LoadedBuildOrders, SortByMatchupIndex);
+					SortByMatchupIndex += 1;
+					if (SortByMatchupIndex > SortBuildsOrder.Z_T_P)
+						SortByMatchupIndex = SortBuildsOrder.T_P_Z;
+					PopulateBuildList(buildsSorted);
+					ReSelectBuildInList();
+					break;
+			}
+		}
+
+		/************************************************************************************************************
+		 *
+		 *	Create Build 
+		 *
+		 ************************************************************************************************************/
+		private void CreateBuild_Click(object sender, EventArgs e)
+		{
+			EditorContents editContent = new EditorContents(NameBox.Text, RaceBox.Text, MatchupBox.Text.Replace("-vs-", null), BuildSpecTextBox.Text);
+
+			if (editContent.ContentIsValid())
+			{
+				if (CheckDuplicateBuildNames(editContent.Name))
+				{
+					SelectedBuild = editContent.ToBuild();
+					BuildWriter.WriteToFile(SelectedBuild);
+					RefreshBuildData();
+				}
+				else
+					MessageBox.Show(DUPLICATES_ERROR, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+			}
+			else
+				MessageBox.Show(INVALID_ERROR, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+		}
+
+		/************************************************************************************************************
+		 *
+		 *	Update Selected Build 
+		 *
+		 ************************************************************************************************************/
+		private void UpdateBuild_Click(object sender, EventArgs e)
+		{
+			EditorContents editContent = new EditorContents(NameBox.Text, RaceBox.Text, MatchupBox.Text.Replace("-vs-", null), BuildSpecTextBox.Text);
+
+			if (editContent.ContentIsValid() && SelectedBuild != null)
+			{
+				File.Delete(SelectedBuild.Filepath);
+				SelectedBuild = editContent.ToBuild();
+				BuildWriter.WriteToFile(SelectedBuild);
+				RefreshBuildData();
+			}
+			else
+				MessageBox.Show(INVALID_ERROR, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+		}
+
+		/************************************************************************************************************
+		 *
+		 *	Delete Selected Build
+		 *
+		 ************************************************************************************************************/
+		private void DeleteBuild_Click(object sender, EventArgs e)
+		{
+			if (SelectedBuild != null)
+			{
+				if (MessageBox.Show("Are you sure?", "Warning", MessageBoxButtons.OKCancel, MessageBoxIcon.Exclamation) == DialogResult.OK)
+				{
+					File.Delete(SelectedBuild.Filepath);
+					SelectedBuild = null;
+					RefreshBuildData();
+				}
+			}
+			else
+				MessageBox.Show(SELECTION_ERROR, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+		}
+
+		/************************************************************************************************************
+		 *
+		 *	Change Build Selection (SelectedBuild)	
+		 *
+		 ************************************************************************************************************/
+		private void BuildList_SelectedIndexChanged(object sender, EventArgs e)
+		{
+			ListView.SelectedListViewItemCollection selected = BuildList.SelectedItems;
+			SelectedBuild = null;
+			if (selected.Count > 0)
+			{
+				foreach (Build B in LoadedBuildOrders)
+				{
+					if (B.Equals(selected[0].Text))
+					{
+						this.SelectedBuild = B;
+						PopulateStepList(this.SelectedBuild);
+						PopulateBuildEditor(this.SelectedBuild);
+						break;
+					}
+				}
+			}
+			else
+			{
+				PopulateStepList(null);
+				ClearBuildEditor();
+			}
+		}
+
+		/************************************************************************************************************
+		 *
+		 *	Load External Build File
+		 *
+		 ************************************************************************************************************/
+		private void LoadToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			OpenFileDialog ofd = new OpenFileDialog();
+			ofd.Filter = "txt files (*.txt)|*.txt";
+			ofd.FilterIndex = 1;
+			if (ofd.ShowDialog() == DialogResult.OK)
+			{
+				Build read = BuildReader.ReadFromFile(ofd.FileName);
+				BuildWriter.WriteToFile(read);
+				LoadedBuildOrders = BuildReader.ReadFromBuildDirectory();
+
+				PopulateBuildList(LoadedBuildOrders);
+				PopulateStepList(read); //we don't need to add the Build to the BuildList yet.
+				PopulateBuildEditor(read); // ^^
+
+				SelectedBuild = read;
+				ReSelectBuildInList();
+			}
+		}
+	}
 }

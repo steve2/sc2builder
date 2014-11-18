@@ -8,21 +8,21 @@ using System.IO;
 
 namespace SC2Builder
 {
-    class AppPath
-    {
-        public static string GetRoot()
-        {
-            return Path.GetFullPath(Path.Combine(Application.StartupPath, "..", ".."));
-        }
+	class AppPath
+	{
+		public static string GetRoot()
+		{
+			return Path.GetFullPath(Path.Combine(Application.StartupPath, "..", ".."));
+		}
 
-        public static string GetBuilds()
-        {
-            return Path.Combine(GetRoot(), "builds");
-        }
+		public static string GetBuilds()
+		{
+			return Path.Combine(GetRoot(), "builds");
+		}
 
-        public static string GetResources()
-        {
-            return Path.Combine(GetRoot(), "Resources");
-        }
-    }
+		public static string GetResources()
+		{
+			return Path.Combine(GetRoot(), "Resources");
+		}
+	}
 }
