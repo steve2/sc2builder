@@ -32,8 +32,15 @@ namespace SC2Builder
 			while ((line = filereader.ReadLine()) != null)
 			{
 				lineSplit = line.Split('-');
-				buildStep = new Step(lineSplit[0], lineSplit[1]);
-				buildSteps.Add(buildStep);
+				if (lineSplit.Length == 2)
+				{
+					buildStep = new Step(lineSplit[0], lineSplit[1]);
+					buildSteps.Add(buildStep);
+				}
+				else
+				{
+					buildSteps.Add(Step.ErrorStep);
+				}
 			}
 			filereader.Close();
 			return new Build(buildName, buildMatchup, buildSteps, filename);

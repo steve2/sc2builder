@@ -36,6 +36,10 @@
 			this.toolStripMenuItem2 = new System.Windows.Forms.ToolStripSeparator();
 			this.ExitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.editToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.createBuildToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.createToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.updateToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.deleteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.StepList = new System.Windows.Forms.ListView();
 			this.StepHeader = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
@@ -48,7 +52,6 @@
 			this.BuildEditorGroup = new System.Windows.Forms.GroupBox();
 			this.label4 = new System.Windows.Forms.Label();
 			this.BuildSpecTextBox = new System.Windows.Forms.RichTextBox();
-			this.DeleteBuild = new System.Windows.Forms.Button();
 			this.UpdateBuild = new System.Windows.Forms.Button();
 			this.CreateBuild = new System.Windows.Forms.Button();
 			this.label3 = new System.Windows.Forms.Label();
@@ -58,15 +61,34 @@
 			this.label2 = new System.Windows.Forms.Label();
 			this.label1 = new System.Windows.Forms.Label();
 			this.OpenBuildDialog = new System.DirectoryServices.DirectorySearcher();
-			this.NamingProblem = new System.Windows.Forms.ErrorProvider(this.components);
-			this.createBuildToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-			this.createToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-			this.updateToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-			this.deleteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.BuildSpecCustomizables = new System.Windows.Forms.ContextMenuStrip(this.components);
+			this.addToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.terranToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.supplyDepotToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.supplyDepotToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+			this.refineryToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.barracksToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.commandCenterToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.engineeringBayToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.factoryToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.starportToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.armoryToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.fusionCoreToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.missileTurretToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.sensorTowerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.bunkerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.upgradesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.orbitalCommandToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.planetaryFortressToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.techLabToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.reactorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.protossToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.zergToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.DeleteBuild = new System.Windows.Forms.Button();
 			this.FileMenu.SuspendLayout();
 			this.BuildPreviewerGroup.SuspendLayout();
 			this.BuildEditorGroup.SuspendLayout();
-			((System.ComponentModel.ISupportInitialize)(this.NamingProblem)).BeginInit();
+			this.BuildSpecCustomizables.SuspendLayout();
 			this.SuspendLayout();
 			// 
 			// FileMenu
@@ -122,6 +144,40 @@
 			this.editToolStripMenuItem.Name = "editToolStripMenuItem";
 			this.editToolStripMenuItem.Size = new System.Drawing.Size(39, 20);
 			this.editToolStripMenuItem.Text = "&Edit";
+			// 
+			// createBuildToolStripMenuItem
+			// 
+			this.createBuildToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.createToolStripMenuItem,
+            this.updateToolStripMenuItem,
+            this.deleteToolStripMenuItem});
+			this.createBuildToolStripMenuItem.Name = "createBuildToolStripMenuItem";
+			this.createBuildToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+			this.createBuildToolStripMenuItem.Text = "&Build";
+			// 
+			// createToolStripMenuItem
+			// 
+			this.createToolStripMenuItem.Name = "createToolStripMenuItem";
+			this.createToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.C)));
+			this.createToolStripMenuItem.Size = new System.Drawing.Size(154, 22);
+			this.createToolStripMenuItem.Text = "&Create";
+			this.createToolStripMenuItem.Click += new System.EventHandler(this.createToolStripMenuItem_Click);
+			// 
+			// updateToolStripMenuItem
+			// 
+			this.updateToolStripMenuItem.Name = "updateToolStripMenuItem";
+			this.updateToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.U)));
+			this.updateToolStripMenuItem.Size = new System.Drawing.Size(154, 22);
+			this.updateToolStripMenuItem.Text = "&Update";
+			this.updateToolStripMenuItem.Click += new System.EventHandler(this.updateToolStripMenuItem_Click);
+			// 
+			// deleteToolStripMenuItem
+			// 
+			this.deleteToolStripMenuItem.Name = "deleteToolStripMenuItem";
+			this.deleteToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.D)));
+			this.deleteToolStripMenuItem.Size = new System.Drawing.Size(154, 22);
+			this.deleteToolStripMenuItem.Text = "&Delete";
+			this.deleteToolStripMenuItem.Click += new System.EventHandler(this.deleteToolStripMenuItem_Click);
 			// 
 			// helpToolStripMenuItem
 			// 
@@ -188,6 +244,7 @@
 			this.BuildList.Font = new System.Drawing.Font("Calibri Light", 8.75F);
 			this.BuildList.FullRowSelect = true;
 			this.BuildList.GridLines = true;
+			this.BuildList.HideSelection = false;
 			this.BuildList.LabelWrap = false;
 			this.BuildList.Location = new System.Drawing.Point(7, 24);
 			this.BuildList.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
@@ -272,6 +329,7 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
 			this.BuildSpecTextBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+			this.BuildSpecTextBox.ContextMenuStrip = this.BuildSpecCustomizables;
 			this.BuildSpecTextBox.Font = new System.Drawing.Font("Calibri Light", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.BuildSpecTextBox.Location = new System.Drawing.Point(6, 142);
 			this.BuildSpecTextBox.Name = "BuildSpecTextBox";
@@ -279,21 +337,6 @@
 			this.BuildSpecTextBox.TabIndex = 5;
 			this.BuildSpecTextBox.Text = "";
 			this.BuildSpecTextBox.WordWrap = false;
-			// 
-			// DeleteBuild
-			// 
-			this.DeleteBuild.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
-			this.DeleteBuild.Font = new System.Drawing.Font("Calibri Light", 8.75F);
-			this.DeleteBuild.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-			this.DeleteBuild.ImageIndex = 0;
-			this.DeleteBuild.ImageList = this.Images;
-			this.DeleteBuild.Location = new System.Drawing.Point(116, 423);
-			this.DeleteBuild.Name = "DeleteBuild";
-			this.DeleteBuild.Size = new System.Drawing.Size(106, 31);
-			this.DeleteBuild.TabIndex = 8;
-			this.DeleteBuild.Text = "Delete";
-			this.DeleteBuild.UseVisualStyleBackColor = true;
-			this.DeleteBuild.Click += new System.EventHandler(this.DeleteBuild_Click);
 			// 
 			// UpdateBuild
 			// 
@@ -410,43 +453,221 @@
 			this.OpenBuildDialog.ServerPageTimeLimit = System.TimeSpan.Parse("-00:00:01");
 			this.OpenBuildDialog.ServerTimeLimit = System.TimeSpan.Parse("-00:00:01");
 			// 
-			// NamingProblem
+			// BuildSpecCustomizables
 			// 
-			this.NamingProblem.ContainerControl = this;
+			this.BuildSpecCustomizables.Font = new System.Drawing.Font("Calibri Light", 8.75F);
+			this.BuildSpecCustomizables.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.addToolStripMenuItem});
+			this.BuildSpecCustomizables.Name = "BuildSpecCustomizables";
+			this.BuildSpecCustomizables.Size = new System.Drawing.Size(153, 48);
+			this.BuildSpecCustomizables.Text = "Widgets";
 			// 
-			// createBuildToolStripMenuItem
+			// addToolStripMenuItem
 			// 
-			this.createBuildToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.createToolStripMenuItem,
-            this.updateToolStripMenuItem,
-            this.deleteToolStripMenuItem});
-			this.createBuildToolStripMenuItem.Name = "createBuildToolStripMenuItem";
-			this.createBuildToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
-			this.createBuildToolStripMenuItem.Text = "&Build";
+			this.addToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.terranToolStripMenuItem,
+            this.protossToolStripMenuItem,
+            this.zergToolStripMenuItem});
+			this.addToolStripMenuItem.Name = "addToolStripMenuItem";
+			this.addToolStripMenuItem.Size = new System.Drawing.Size(137, 22);
+			this.addToolStripMenuItem.Text = "Graphic Tags";
 			// 
-			// createToolStripMenuItem
+			// terranToolStripMenuItem
 			// 
-			this.createToolStripMenuItem.Name = "createToolStripMenuItem";
-			this.createToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.C)));
-			this.createToolStripMenuItem.Size = new System.Drawing.Size(154, 22);
-			this.createToolStripMenuItem.Text = "&Create";
-			this.createToolStripMenuItem.Click += new System.EventHandler(this.createToolStripMenuItem_Click);
+			this.terranToolStripMenuItem.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
+			this.terranToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.supplyDepotToolStripMenuItem,
+            this.upgradesToolStripMenuItem});
+			this.terranToolStripMenuItem.Image = global::SC2Builder.Properties.Resources.terran;
+			this.terranToolStripMenuItem.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
+			this.terranToolStripMenuItem.Name = "terranToolStripMenuItem";
+			this.terranToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+			this.terranToolStripMenuItem.Text = "Terran";
 			// 
-			// updateToolStripMenuItem
+			// supplyDepotToolStripMenuItem
 			// 
-			this.updateToolStripMenuItem.Name = "updateToolStripMenuItem";
-			this.updateToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.U)));
-			this.updateToolStripMenuItem.Size = new System.Drawing.Size(154, 22);
-			this.updateToolStripMenuItem.Text = "&Update";
-			this.updateToolStripMenuItem.Click += new System.EventHandler(this.updateToolStripMenuItem_Click);
+			this.supplyDepotToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.supplyDepotToolStripMenuItem1,
+            this.refineryToolStripMenuItem,
+            this.barracksToolStripMenuItem,
+            this.commandCenterToolStripMenuItem,
+            this.engineeringBayToolStripMenuItem,
+            this.factoryToolStripMenuItem,
+            this.starportToolStripMenuItem,
+            this.armoryToolStripMenuItem,
+            this.fusionCoreToolStripMenuItem,
+            this.missileTurretToolStripMenuItem,
+            this.sensorTowerToolStripMenuItem,
+            this.bunkerToolStripMenuItem});
+			this.supplyDepotToolStripMenuItem.Name = "supplyDepotToolStripMenuItem";
+			this.supplyDepotToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+			this.supplyDepotToolStripMenuItem.Text = "Structures";
 			// 
-			// deleteToolStripMenuItem
+			// supplyDepotToolStripMenuItem1
 			// 
-			this.deleteToolStripMenuItem.Name = "deleteToolStripMenuItem";
-			this.deleteToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.D)));
-			this.deleteToolStripMenuItem.Size = new System.Drawing.Size(154, 22);
-			this.deleteToolStripMenuItem.Text = "&Delete";
-			this.deleteToolStripMenuItem.Click += new System.EventHandler(this.deleteToolStripMenuItem_Click);
+			this.supplyDepotToolStripMenuItem1.Image = global::SC2Builder.Properties.Resources.btn_building_terran_supplydepot;
+			this.supplyDepotToolStripMenuItem1.Name = "supplyDepotToolStripMenuItem1";
+			this.supplyDepotToolStripMenuItem1.Size = new System.Drawing.Size(159, 22);
+			this.supplyDepotToolStripMenuItem1.Text = "Supply Depot";
+			this.supplyDepotToolStripMenuItem1.Click += new System.EventHandler(this.supplyDepotToolStripMenuItem1_Click);
+			// 
+			// refineryToolStripMenuItem
+			// 
+			this.refineryToolStripMenuItem.Image = global::SC2Builder.Properties.Resources.btn_building_terran_refinery;
+			this.refineryToolStripMenuItem.Name = "refineryToolStripMenuItem";
+			this.refineryToolStripMenuItem.Size = new System.Drawing.Size(159, 22);
+			this.refineryToolStripMenuItem.Text = "Refinery";
+			this.refineryToolStripMenuItem.Click += new System.EventHandler(this.refineryToolStripMenuItem_Click);
+			// 
+			// barracksToolStripMenuItem
+			// 
+			this.barracksToolStripMenuItem.Image = global::SC2Builder.Properties.Resources.btn_building_terran_barracks;
+			this.barracksToolStripMenuItem.Name = "barracksToolStripMenuItem";
+			this.barracksToolStripMenuItem.Size = new System.Drawing.Size(159, 22);
+			this.barracksToolStripMenuItem.Text = "Barracks";
+			this.barracksToolStripMenuItem.Click += new System.EventHandler(this.barracksToolStripMenuItem_Click);
+			// 
+			// commandCenterToolStripMenuItem
+			// 
+			this.commandCenterToolStripMenuItem.Image = global::SC2Builder.Properties.Resources.btn_building_terran_commandcenter;
+			this.commandCenterToolStripMenuItem.Name = "commandCenterToolStripMenuItem";
+			this.commandCenterToolStripMenuItem.Size = new System.Drawing.Size(159, 22);
+			this.commandCenterToolStripMenuItem.Text = "Command Center";
+			this.commandCenterToolStripMenuItem.Click += new System.EventHandler(this.commandCenterToolStripMenuItem_Click);
+			// 
+			// engineeringBayToolStripMenuItem
+			// 
+			this.engineeringBayToolStripMenuItem.Image = global::SC2Builder.Properties.Resources.btn_building_terran_engineeringbay;
+			this.engineeringBayToolStripMenuItem.Name = "engineeringBayToolStripMenuItem";
+			this.engineeringBayToolStripMenuItem.Size = new System.Drawing.Size(159, 22);
+			this.engineeringBayToolStripMenuItem.Text = "Engineering Bay";
+			this.engineeringBayToolStripMenuItem.Click += new System.EventHandler(this.engineeringBayToolStripMenuItem_Click);
+			// 
+			// factoryToolStripMenuItem
+			// 
+			this.factoryToolStripMenuItem.Image = global::SC2Builder.Properties.Resources.btn_building_terran_factory;
+			this.factoryToolStripMenuItem.Name = "factoryToolStripMenuItem";
+			this.factoryToolStripMenuItem.Size = new System.Drawing.Size(159, 22);
+			this.factoryToolStripMenuItem.Text = "Factory";
+			this.factoryToolStripMenuItem.Click += new System.EventHandler(this.factoryToolStripMenuItem_Click);
+			// 
+			// starportToolStripMenuItem
+			// 
+			this.starportToolStripMenuItem.Image = global::SC2Builder.Properties.Resources.btn_building_terran_starport;
+			this.starportToolStripMenuItem.Name = "starportToolStripMenuItem";
+			this.starportToolStripMenuItem.Size = new System.Drawing.Size(159, 22);
+			this.starportToolStripMenuItem.Text = "Starport";
+			this.starportToolStripMenuItem.Click += new System.EventHandler(this.starportToolStripMenuItem_Click);
+			// 
+			// armoryToolStripMenuItem
+			// 
+			this.armoryToolStripMenuItem.Image = global::SC2Builder.Properties.Resources.btn_building_terran_armory;
+			this.armoryToolStripMenuItem.Name = "armoryToolStripMenuItem";
+			this.armoryToolStripMenuItem.Size = new System.Drawing.Size(159, 22);
+			this.armoryToolStripMenuItem.Text = "Armory";
+			this.armoryToolStripMenuItem.Click += new System.EventHandler(this.armoryToolStripMenuItem_Click);
+			// 
+			// fusionCoreToolStripMenuItem
+			// 
+			this.fusionCoreToolStripMenuItem.Image = global::SC2Builder.Properties.Resources.btn_building_terran_fusioncore;
+			this.fusionCoreToolStripMenuItem.Name = "fusionCoreToolStripMenuItem";
+			this.fusionCoreToolStripMenuItem.Size = new System.Drawing.Size(159, 22);
+			this.fusionCoreToolStripMenuItem.Text = "Fusion Core";
+			this.fusionCoreToolStripMenuItem.Click += new System.EventHandler(this.fusionCoreToolStripMenuItem_Click);
+			// 
+			// missileTurretToolStripMenuItem
+			// 
+			this.missileTurretToolStripMenuItem.Image = global::SC2Builder.Properties.Resources.btn_building_terran_missileturret;
+			this.missileTurretToolStripMenuItem.Name = "missileTurretToolStripMenuItem";
+			this.missileTurretToolStripMenuItem.Size = new System.Drawing.Size(159, 22);
+			this.missileTurretToolStripMenuItem.Text = "Missile Turret";
+			this.missileTurretToolStripMenuItem.Click += new System.EventHandler(this.missileTurretToolStripMenuItem_Click);
+			// 
+			// sensorTowerToolStripMenuItem
+			// 
+			this.sensorTowerToolStripMenuItem.Image = global::SC2Builder.Properties.Resources.btn_building_terran_sensordome;
+			this.sensorTowerToolStripMenuItem.Name = "sensorTowerToolStripMenuItem";
+			this.sensorTowerToolStripMenuItem.Size = new System.Drawing.Size(159, 22);
+			this.sensorTowerToolStripMenuItem.Text = "Sensor Tower";
+			this.sensorTowerToolStripMenuItem.Click += new System.EventHandler(this.sensorTowerToolStripMenuItem_Click);
+			// 
+			// bunkerToolStripMenuItem
+			// 
+			this.bunkerToolStripMenuItem.Image = global::SC2Builder.Properties.Resources.btn_building_terran_bunker;
+			this.bunkerToolStripMenuItem.Name = "bunkerToolStripMenuItem";
+			this.bunkerToolStripMenuItem.Size = new System.Drawing.Size(159, 22);
+			this.bunkerToolStripMenuItem.Text = "Bunker";
+			this.bunkerToolStripMenuItem.Click += new System.EventHandler(this.bunkerToolStripMenuItem_Click);
+			// 
+			// upgradesToolStripMenuItem
+			// 
+			this.upgradesToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.orbitalCommandToolStripMenuItem,
+            this.planetaryFortressToolStripMenuItem,
+            this.techLabToolStripMenuItem,
+            this.reactorToolStripMenuItem});
+			this.upgradesToolStripMenuItem.Name = "upgradesToolStripMenuItem";
+			this.upgradesToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+			this.upgradesToolStripMenuItem.Text = "Upgrades";
+			// 
+			// orbitalCommandToolStripMenuItem
+			// 
+			this.orbitalCommandToolStripMenuItem.Image = global::SC2Builder.Properties.Resources.btn_building_terran_surveillancestation;
+			this.orbitalCommandToolStripMenuItem.Name = "orbitalCommandToolStripMenuItem";
+			this.orbitalCommandToolStripMenuItem.Size = new System.Drawing.Size(179, 38);
+			this.orbitalCommandToolStripMenuItem.Text = "Orbital Command";
+			// 
+			// planetaryFortressToolStripMenuItem
+			// 
+			this.planetaryFortressToolStripMenuItem.Image = global::SC2Builder.Properties.Resources.btn_building_terran_planetaryfortress;
+			this.planetaryFortressToolStripMenuItem.Name = "planetaryFortressToolStripMenuItem";
+			this.planetaryFortressToolStripMenuItem.Size = new System.Drawing.Size(179, 38);
+			this.planetaryFortressToolStripMenuItem.Text = "Planetary Fortress";
+			// 
+			// techLabToolStripMenuItem
+			// 
+			this.techLabToolStripMenuItem.Image = global::SC2Builder.Properties.Resources.btn_building_terran_techlab;
+			this.techLabToolStripMenuItem.Name = "techLabToolStripMenuItem";
+			this.techLabToolStripMenuItem.Size = new System.Drawing.Size(179, 38);
+			this.techLabToolStripMenuItem.Text = "Tech Lab";
+			// 
+			// reactorToolStripMenuItem
+			// 
+			this.reactorToolStripMenuItem.Image = global::SC2Builder.Properties.Resources.btn_building_terran_reactor;
+			this.reactorToolStripMenuItem.Name = "reactorToolStripMenuItem";
+			this.reactorToolStripMenuItem.Size = new System.Drawing.Size(179, 38);
+			this.reactorToolStripMenuItem.Text = "Reactor";
+			// 
+			// protossToolStripMenuItem
+			// 
+			this.protossToolStripMenuItem.Image = global::SC2Builder.Properties.Resources.protoss;
+			this.protossToolStripMenuItem.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
+			this.protossToolStripMenuItem.Name = "protossToolStripMenuItem";
+			this.protossToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+			this.protossToolStripMenuItem.Text = "Protoss";
+			// 
+			// zergToolStripMenuItem
+			// 
+			this.zergToolStripMenuItem.Image = global::SC2Builder.Properties.Resources.zerg;
+			this.zergToolStripMenuItem.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
+			this.zergToolStripMenuItem.Name = "zergToolStripMenuItem";
+			this.zergToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+			this.zergToolStripMenuItem.Text = "Zerg";
+			// 
+			// DeleteBuild
+			// 
+			this.DeleteBuild.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
+			this.DeleteBuild.Font = new System.Drawing.Font("Calibri Light", 8.75F);
+			this.DeleteBuild.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+			this.DeleteBuild.ImageIndex = 0;
+			this.DeleteBuild.ImageList = this.Images;
+			this.DeleteBuild.Location = new System.Drawing.Point(116, 423);
+			this.DeleteBuild.Name = "DeleteBuild";
+			this.DeleteBuild.Size = new System.Drawing.Size(106, 31);
+			this.DeleteBuild.TabIndex = 8;
+			this.DeleteBuild.Text = "Delete";
+			this.DeleteBuild.UseVisualStyleBackColor = true;
+			this.DeleteBuild.Click += new System.EventHandler(this.DeleteBuild_Click);
 			// 
 			// MainWindow
 			// 
@@ -458,6 +679,7 @@
 			this.Controls.Add(this.FileMenu);
 			this.Controls.Add(this.BuildEditorGroup);
 			this.Controls.Add(this.BuildPreviewerGroup);
+			this.DoubleBuffered = true;
 			this.Font = new System.Drawing.Font("Calibri Light", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
 			this.KeyPreview = true;
@@ -466,7 +688,7 @@
 			this.MaximizeBox = false;
 			this.MinimumSize = new System.Drawing.Size(825, 538);
 			this.Name = "MainWindow";
-			this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Hide;
+			this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Show;
 			this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
 			this.Text = "StarCraft 2 Build Helper";
 			this.Load += new System.EventHandler(this.MainWindow_Load);
@@ -475,7 +697,7 @@
 			this.BuildPreviewerGroup.ResumeLayout(false);
 			this.BuildEditorGroup.ResumeLayout(false);
 			this.BuildEditorGroup.PerformLayout();
-			((System.ComponentModel.ISupportInitialize)(this.NamingProblem)).EndInit();
+			this.BuildSpecCustomizables.ResumeLayout(false);
 			this.ResumeLayout(false);
 			this.PerformLayout();
 
@@ -508,14 +730,36 @@
         private System.Windows.Forms.TextBox NameBox;
         private System.Windows.Forms.Button UpdateBuild;
         private System.Windows.Forms.Button CreateBuild;
-        private System.Windows.Forms.Button DeleteBuild;
-        private System.Windows.Forms.ErrorProvider NamingProblem;
+				private System.Windows.Forms.Button DeleteBuild;
 				private System.Windows.Forms.Label label4;
 				private System.Windows.Forms.RichTextBox BuildSpecTextBox;
 				private System.Windows.Forms.ToolStripMenuItem createBuildToolStripMenuItem;
 				private System.Windows.Forms.ToolStripMenuItem createToolStripMenuItem;
 				private System.Windows.Forms.ToolStripMenuItem updateToolStripMenuItem;
 				private System.Windows.Forms.ToolStripMenuItem deleteToolStripMenuItem;
+				private System.Windows.Forms.ContextMenuStrip BuildSpecCustomizables;
+				private System.Windows.Forms.ToolStripMenuItem addToolStripMenuItem;
+				private System.Windows.Forms.ToolStripMenuItem terranToolStripMenuItem;
+				private System.Windows.Forms.ToolStripMenuItem protossToolStripMenuItem;
+				private System.Windows.Forms.ToolStripMenuItem zergToolStripMenuItem;
+				private System.Windows.Forms.ToolStripMenuItem supplyDepotToolStripMenuItem;
+				private System.Windows.Forms.ToolStripMenuItem supplyDepotToolStripMenuItem1;
+				private System.Windows.Forms.ToolStripMenuItem refineryToolStripMenuItem;
+				private System.Windows.Forms.ToolStripMenuItem barracksToolStripMenuItem;
+				private System.Windows.Forms.ToolStripMenuItem commandCenterToolStripMenuItem;
+				private System.Windows.Forms.ToolStripMenuItem engineeringBayToolStripMenuItem;
+				private System.Windows.Forms.ToolStripMenuItem factoryToolStripMenuItem;
+				private System.Windows.Forms.ToolStripMenuItem starportToolStripMenuItem;
+				private System.Windows.Forms.ToolStripMenuItem armoryToolStripMenuItem;
+				private System.Windows.Forms.ToolStripMenuItem missileTurretToolStripMenuItem;
+				private System.Windows.Forms.ToolStripMenuItem sensorTowerToolStripMenuItem;
+				private System.Windows.Forms.ToolStripMenuItem bunkerToolStripMenuItem;
+				private System.Windows.Forms.ToolStripMenuItem fusionCoreToolStripMenuItem;
+				private System.Windows.Forms.ToolStripMenuItem upgradesToolStripMenuItem;
+				private System.Windows.Forms.ToolStripMenuItem orbitalCommandToolStripMenuItem;
+				private System.Windows.Forms.ToolStripMenuItem planetaryFortressToolStripMenuItem;
+				private System.Windows.Forms.ToolStripMenuItem techLabToolStripMenuItem;
+				private System.Windows.Forms.ToolStripMenuItem reactorToolStripMenuItem;
 
     }
 }

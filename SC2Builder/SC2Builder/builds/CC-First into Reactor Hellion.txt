@@ -5,4 +5,3 @@ Terran-Zerg
 15-Barracks
 16-Refinery
 18-Halt SCV Production
-20-2nd Refinery

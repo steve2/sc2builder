@@ -31,8 +31,15 @@ namespace SC2Builder.Model
 				if (str != "" && str != null)
 				{
 					splitDash = str.Split('-');
-					tempStep = new Step(splitDash[0], splitDash[1]);
-					this.stepList.Add(tempStep);
+					if (splitDash.Length == 2)
+					{
+						tempStep = new Step(splitDash[0], splitDash[1]);
+						this.stepList.Add(tempStep);
+					}
+					else
+					{
+						this.stepList.Add(Step.ErrorStep);
+					}
 				}
 			}
 		}
@@ -42,8 +49,13 @@ namespace SC2Builder.Model
 			bool bNameCondition = (sName != null && !sName.Trim().Equals(""));
 			bool bRaceCondition = (sRace.Equals("Terran") || sRace.Equals("Protoss") || sRace.Equals("Zerg"));
 			bool bMatchCondition = (sMatchup.Equals("Terran") || sMatchup.Equals("Protoss") || sMatchup.Equals("Zerg"));
+			bool bStepErrors = true;
 
-			return bNameCondition && bRaceCondition && bMatchCondition;
+			foreach (Step S in stepList)
+				if (S.Equals(Step.ErrorStep))
+					bStepErrors = false;
+
+			return bNameCondition && bRaceCondition && bMatchCondition && bStepErrors;
 		}
 
 		public Build ToBuild()

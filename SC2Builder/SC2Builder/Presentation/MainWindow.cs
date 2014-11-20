@@ -19,9 +19,20 @@ namespace SC2Builder
 	public partial class MainWindow : Form
 	{
 
+		public const string APP_NAME = "BuildHelper";
+
+		public const string ERROR_STR = "Error";
+		public const string WARNING_STR = "Warning";
+		public const string INFO_STR = "Information";
+
 		public const string DUPLICATES_ERROR = "Error: Build already exists with this name.";
 		public const string SELECTION_ERROR = "Error: No build is currently selected.";
 		public const string INVALID_ERROR = "Error: Build contains invalid information.";
+		public const string DELETE_WARNING = "Are you sure you want to delete this Build?";
+		public const string LOADING_INFO = "Build is already loaded into " + APP_NAME;
+
+		public const string INVALID_STEP_STR = "----";
+		public const string INVALID_STEP_COMMAND = "---- Invalid Build-Step Detected ----\n";
 
 		public const string TERRAN = "Terran";
 		public const string PROTOSS = "Protoss";
@@ -66,6 +77,8 @@ namespace SC2Builder
 		{
 			LoadedBuildOrders = BuildReader.ReadFromBuildDirectory();
 			PopulateBuildList(LoadedBuildOrders);
+
+			BuildSpecCustomizables.ImageScalingSize = new System.Drawing.Size(8, 8);
 		}
 
 		private void BuildList_ColumnWidthChanging(object sender, ColumnWidthChangingEventArgs e)
@@ -260,13 +273,21 @@ namespace SC2Builder
 			{
 				foreach (Step S in build.Steps)
 				{
-					ListViewItem stepItem = new ListViewItem(S.ToString());
-					if (build.Race.Equals(TERRAN))
-						stepItem.ImageIndex = imageLookupTable["icon-terran-supply"];
-					else if (build.Race.Equals(PROTOSS))
-						stepItem.ImageIndex = imageLookupTable["icon-protoss-supply"];
-					else if (build.Race.Equals(ZERG))
-						stepItem.ImageIndex = imageLookupTable["icon-zerg-supply"];
+					ListViewItem stepItem;
+					if (S.Equals(Step.ErrorStep))
+					{
+						stepItem = new ListViewItem(INVALID_STEP_STR);
+					}
+					else
+					{
+						stepItem = new ListViewItem(S.ToString());
+						if (build.Race.Equals(TERRAN))
+							stepItem.ImageIndex = imageLookupTable["icon-terran-supply"];
+						else if (build.Race.Equals(PROTOSS))
+							stepItem.ImageIndex = imageLookupTable["icon-protoss-supply"];
+						else if (build.Race.Equals(ZERG))
+							stepItem.ImageIndex = imageLookupTable["icon-zerg-supply"];
+					}
 					StepList.Items.Add(stepItem);
 				}
 			}
@@ -294,7 +315,14 @@ namespace SC2Builder
 
 				BuildSpecTextBox.Text = "";
 				foreach (Step S in build.Steps)
-					BuildSpecTextBox.Text = BuildSpecTextBox.Text + (S.RawString()) + "\n";
+					if (S.Equals(Step.ErrorStep))
+					{
+						BuildSpecTextBox.Text = BuildSpecTextBox.Text + (INVALID_STEP_COMMAND);
+					}
+					else
+					{
+						BuildSpecTextBox.Text = BuildSpecTextBox.Text + (S.RawString()) + "\n";
+					}
 			}
 		}
 
@@ -310,17 +338,15 @@ namespace SC2Builder
 
 		/******************************** Input Validation ********************************/
 
-		private bool CheckDuplicateBuildNames(string buildName)
+		private Build GetBuildByNameFromList(string buildName)
 		{
 			foreach (Build B in LoadedBuildOrders)
 			{
 				if (B.Name.Equals(buildName))
-					return false;
+					return B;
 			}
-			return true;
+			return null;
 		}
-
-
 
 
 		/******************************** User Interface Events ********************************/
@@ -378,17 +404,17 @@ namespace SC2Builder
 
 			if (editContent.ContentIsValid())
 			{
-				if (CheckDuplicateBuildNames(editContent.Name))
+				if (GetBuildByNameFromList(editContent.Name) == null)
 				{
 					SelectedBuild = editContent.ToBuild();
 					BuildWriter.WriteToFile(SelectedBuild);
 					RefreshBuildData();
 				}
 				else
-					MessageBox.Show(DUPLICATES_ERROR, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+					MessageBox.Show(DUPLICATES_ERROR, ERROR_STR, MessageBoxButtons.OK, MessageBoxIcon.Error);
 			}
 			else
-				MessageBox.Show(INVALID_ERROR, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+				MessageBox.Show(INVALID_ERROR, ERROR_STR, MessageBoxButtons.OK, MessageBoxIcon.Error);
 		}
 
 		private void CreateBuild_Click(object sender, EventArgs e)
@@ -409,16 +435,28 @@ namespace SC2Builder
 		private void UpdateSelectedBuild()
 		{
 			EditorContents editContent = new EditorContents(NameBox.Text, RaceBox.Text, MatchupBox.Text.Replace("-vs-", null), BuildSpecTextBox.Text);
+			Build searchForBuild;
 
-			if (editContent.ContentIsValid() && SelectedBuild != null)
+			if (SelectedBuild != null)
 			{
-				File.Delete(SelectedBuild.Filepath);
-				SelectedBuild = editContent.ToBuild();
-				BuildWriter.WriteToFile(SelectedBuild);
-				RefreshBuildData();
+				if (editContent.ContentIsValid())
+				{
+					searchForBuild = GetBuildByNameFromList(editContent.Name);
+					if (searchForBuild == null || searchForBuild.Equals(SelectedBuild))
+					{
+						File.Delete(SelectedBuild.Filepath);
+						SelectedBuild = editContent.ToBuild();
+						BuildWriter.WriteToFile(SelectedBuild);
+						RefreshBuildData();
+					}
+					else
+						MessageBox.Show(DUPLICATES_ERROR, ERROR_STR, MessageBoxButtons.OK, MessageBoxIcon.Error);
+				}
+				else
+					MessageBox.Show(INVALID_ERROR, ERROR_STR, MessageBoxButtons.OK, MessageBoxIcon.Error);
 			}
 			else
-				MessageBox.Show(INVALID_ERROR, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+				MessageBox.Show(SELECTION_ERROR, ERROR_STR, MessageBoxButtons.OK, MessageBoxIcon.Error);
 		}
 
 		private void UpdateBuild_Click(object sender, EventArgs e)
@@ -436,11 +474,12 @@ namespace SC2Builder
 		 *	Delete Selected Build
 		 *
 		 ************************************************************************************************************/
+
 		private void DeleteSelectedBuild()
 		{
 			if (SelectedBuild != null)
 			{
-				if (MessageBox.Show("Are you sure?", "Warning", MessageBoxButtons.OKCancel, MessageBoxIcon.Exclamation) == DialogResult.OK)
+				if (MessageBox.Show(DELETE_WARNING, WARNING_STR, MessageBoxButtons.OKCancel, MessageBoxIcon.Exclamation) == DialogResult.OK)
 				{
 					File.Delete(SelectedBuild.Filepath);
 					SelectedBuild = null;
@@ -448,7 +487,7 @@ namespace SC2Builder
 				}
 			}
 			else
-				MessageBox.Show(SELECTION_ERROR, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+				MessageBox.Show(SELECTION_ERROR, ERROR_STR, MessageBoxButtons.OK, MessageBoxIcon.Error);
 		}
 
 		private void DeleteBuild_Click(object sender, EventArgs e)
@@ -503,19 +542,101 @@ namespace SC2Builder
 			if (ofd.ShowDialog() == DialogResult.OK)
 			{
 				Build read = BuildReader.ReadFromFile(ofd.FileName);
-				BuildWriter.WriteToFile(read);
-				LoadedBuildOrders = BuildReader.ReadFromBuildDirectory();
+				Build inList = GetBuildByNameFromList(read.Name);
+				if (inList == null)
+				{
+					BuildWriter.WriteToFile(read);
+					LoadedBuildOrders = BuildReader.ReadFromBuildDirectory();
 
-				PopulateBuildList(LoadedBuildOrders);
-				PopulateStepList(read); //we don't need to add the Build to the BuildList yet.
-				PopulateBuildEditor(read); // ^^
+					PopulateBuildList(LoadedBuildOrders);
+					PopulateStepList(read); //we don't need to add the Build to the BuildList yet.
+					PopulateBuildEditor(read); // ^^
 
-				SelectedBuild = read;
-				ReSelectBuildInList();
+					SelectedBuild = read;
+					ReSelectBuildInList();
+				}
+				else
+				{
+					MessageBox.Show(LOADING_INFO, INFO_STR, MessageBoxButtons.OK, MessageBoxIcon.Information);
+					SelectedBuild = inList;
+					ReSelectBuildInList();
+				}
 			}
 		}
 
 
+		/************************************************************************************************************
+		 *
+		 *	Build Editor Tags
+		 *
+		 ************************************************************************************************************/
+		private void InsertEditorTag(string tag)
+		{
+			int placement = BuildSpecTextBox.SelectionStart;
+			string sTotal = BuildSpecTextBox.Text;
+			string sBefore = sTotal.Substring(0, placement);
+			string sAfter = sTotal.Substring(placement);
+
+			BuildSpecTextBox.Text = sBefore + tag + sAfter;
+			BuildSpecTextBox.SelectionStart = placement + tag.Length;
+		}
+
+		private void supplyDepotToolStripMenuItem1_Click(object sender, EventArgs e)
+		{
+			InsertEditorTag("{depot}");
+		}
+		private void refineryToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			InsertEditorTag("{refinery}"); 
+		}
+		private void barracksToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			InsertEditorTag("{barracks}"); 
+		}
+		private void commandCenterToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			InsertEditorTag("{commandcenter}");
+		}
+		private void engineeringBayToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			InsertEditorTag("{engineering}");
+		}
+		private void factoryToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			InsertEditorTag("{factory}");
+		}
+		private void starportToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			InsertEditorTag("{starport}");
+		}
+		private void armoryToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			InsertEditorTag("{armory}");
+		}
+		private void fusionCoreToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			InsertEditorTag("{fusioncore}");
+		}
+		private void techLabToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			InsertEditorTag("{techlab}");
+		}
+		private void reactorToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			InsertEditorTag("{reactor}");
+		}
+		private void missileTurretToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			InsertEditorTag("{turret}");
+		}
+		private void sensorTowerToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			InsertEditorTag("{sensor}");
+		}
+		private void bunkerToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			InsertEditorTag("{bunker}");
+		}
 
 
 	}

@@ -8,6 +8,8 @@ namespace SC2Builder
 {
 	class Step
 	{
+		public static Step ErrorStep = new Step("9999INVALID", "9999INVALID");
+
 		private string sRequirement;
 		private string sAction;
 
@@ -38,7 +40,7 @@ namespace SC2Builder
 			{
 				if (c == '{') cpy = false;
 				if (cpy) result += c;
-				if (c == '}') cpy = true;
+				if (c == '}') cpy = true; 
 			}
 			return result;
 		}
