@@ -1,0 +1,23 @@
+Innovation's Safe Bio Build
+Terran-Protoss
+{supply}10-{depot}Supply Depot
+{supply}12-{barracks}Barracks
+{supply}15-{orbital}Orbital Command
+{supply}15-{reaper}Reaper (Pull 1 SCV from Refinery)
+{supply}17-{commandcenter}2nd Command Center
+{supply}17-{reactor}Reactor on Barracks
+{supply}18-{depot}Supply Depot
+{gas}100-{factory}Factory (Put 1 SCV into Refinery)
+{supply}22-{bunker}Bunker
+{time}Factory-{starport}Starport and {widowmine}Widow Mine
+{time}Starport-{medivac}Medivac
+{time}Starport-{barracks}Barracks × 2
+{time}Starport-{refinery}Refinery × 2
+{time}Medivac-{techlab}Tech Lab on Factory
+{time}Medivac-{techlab}Tech Lab on Starport
+{time}Medivac-{engineering}Engineering Bay
+{time}2nd/3rd Barracks-Swap Barracks to Factory/Starport Tech Labs.
+{time}2nd/3rd Barracks-{stimpack}Stimpack + {combatshields}Combat Shields
+{time}2nd/3rd Barracks-{infantryattack1}+1 Infantry Attack Ugrade
+{gas}50-{reactor}Reactor on Starports
+{minerals}400-{commandcenter}18th Command Center

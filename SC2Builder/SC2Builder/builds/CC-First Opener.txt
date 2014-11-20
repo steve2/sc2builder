@@ -1,0 +1,9 @@
+CC-First Opener
+Terran-Protoss
+{supply}10-{depot}Supply Depot
+{supply}14-{commandcenter}Command Center
+{supply}15-{barracks}1st Barracks
+{supply}17-{barracks}2nd Barracks
+{supply}19-{orbital}Orbital Command × 2
+{supply}19-{bunker}Bunker
+{supply}26-{depot}Supply Depot

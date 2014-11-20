@@ -1,0 +1,10 @@
+Reaper FE
+Terran-Protoss
+{supply}10-{depot}Supply Depot
+{supply}12-{barracks}Barracks
+{supply}12-{refinery}Refinery
+{supply}15-{orbital}Orbital Command
+{supply}17-{reactor}Reactor on Barracks
+{supply}17-{commandcenter}2nd Command Center
+{supply}18-{depot}Supply Depot
+{supply}20-{bunker}Bunker

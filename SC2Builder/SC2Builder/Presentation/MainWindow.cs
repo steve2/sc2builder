@@ -32,7 +32,7 @@ namespace SC2Builder
 		public const string LOADING_INFO = "Build is already loaded into " + APP_NAME;
 
 		public const string INVALID_STEP_STR = "----";
-		public const string INVALID_STEP_COMMAND = "---- Invalid Build-Step Detected ----\n";
+		public const string INVALID_STEP_COMMAND = "---- Invalid Build-Step Detected ----";
 
 		public const string TERRAN = "Terran";
 		public const string PROTOSS = "Protoss";
@@ -44,6 +44,7 @@ namespace SC2Builder
 		private Build SelectedBuild;
 		private bool bBuildListSortedByRace;
 		private bool bBuildListSortedByMatchup;
+		private bool bFormattingEnabled;
 
 		private SortBuildsOrder SortByRaceIndex;
 		private SortBuildsOrder SortByMatchupIndex;
@@ -59,6 +60,7 @@ namespace SC2Builder
 			LoadedBuildOrders = new List<Build>();
 			SelectedBuild = null;
 
+			bFormattingEnabled = true;
 			bBuildListSortedByRace = false;
 			bBuildListSortedByMatchup = false;
 			SortByRaceIndex = (SortBuildsOrder)0;
@@ -77,8 +79,6 @@ namespace SC2Builder
 		{
 			LoadedBuildOrders = BuildReader.ReadFromBuildDirectory();
 			PopulateBuildList(LoadedBuildOrders);
-
-			BuildSpecCustomizables.ImageScalingSize = new System.Drawing.Size(8, 8);
 		}
 
 		private void BuildList_ColumnWidthChanging(object sender, ColumnWidthChangingEventArgs e)
@@ -266,29 +266,49 @@ namespace SC2Builder
 			}
 		}
 
+		private int GetStepListImageIndex(string race, Step S)
+		{
+			List<string> stepTags = Step.GetTags(S.RawString());
+			if (stepTags[0].ToLower().Equals("minerals") || stepTags[0].ToLower().Equals("mineral"))
+			{
+				return imageLookupTable["icon-minerals"];
+			}
+			else
+			{
+				return imageLookupTable["icon-" + race.ToLower() + "-" + stepTags[0]];
+			}
+		}
+
 		private void PopulateStepList(Build build)
 		{
+			Step prev = null;
+			string step;
+
 			StepList.Items.Clear();
 			if (build != null)
 			{
 				foreach (Step S in build.Steps)
 				{
-					ListViewItem stepItem;
+					ListViewItem stepItem = new ListViewItem();
 					if (S.Equals(Step.ErrorStep))
 					{
 						stepItem = new ListViewItem(INVALID_STEP_STR);
 					}
 					else
 					{
-						stepItem = new ListViewItem(S.ToString());
-						if (build.Race.Equals(TERRAN))
-							stepItem.ImageIndex = imageLookupTable["icon-terran-supply"];
-						else if (build.Race.Equals(PROTOSS))
-							stepItem.ImageIndex = imageLookupTable["icon-protoss-supply"];
-						else if (build.Race.Equals(ZERG))
-							stepItem.ImageIndex = imageLookupTable["icon-zerg-supply"];
+						if (prev != null && prev.Requisite().Equals(S.Requisite()))
+						{
+							step = S.ToNestedDisplayString();
+						}
+						else
+						{
+							step = S.ToDisplayString();
+							stepItem.ImageIndex = GetStepListImageIndex(build.Race, S);
+						}
+						stepItem.Text = step;
 					}
 					StepList.Items.Add(stepItem);
+					prev = S;
 				}
 			}
 		}
@@ -317,11 +337,11 @@ namespace SC2Builder
 				foreach (Step S in build.Steps)
 					if (S.Equals(Step.ErrorStep))
 					{
-						BuildSpecTextBox.Text = BuildSpecTextBox.Text + (INVALID_STEP_COMMAND);
+						BuildSpecTextBox.AppendText(INVALID_STEP_COMMAND + "\n");
 					}
 					else
 					{
-						BuildSpecTextBox.Text = BuildSpecTextBox.Text + (S.RawString()) + "\n";
+						BuildSpecTextBox.AppendText(S.RawString() + "\n");
 					}
 			}
 		}
@@ -351,6 +371,63 @@ namespace SC2Builder
 
 		/******************************** User Interface Events ********************************/
 
+		/************************************************************************************************************
+		 *
+		 *	Build Specification Formatting
+		 *
+		 ************************************************************************************************************/
+		private void FormatEditorContents()
+		{
+			string text = BuildSpecTextBox.Text;
+			bool formatOn = false;
+			int selectStart, selectLength;
+			int formatStart = -1, formatLength = -1;
+			Font formatFont = new Font(BuildSpecTextBox.Font.Name, BuildSpecTextBox.Font.Size - 1f, FontStyle.Italic | BuildSpecTextBox.Font.Style);
+
+			selectStart = BuildSpecTextBox.SelectionStart;
+			selectLength = BuildSpecTextBox.SelectionLength;
+
+			BuildSpecTextBox.Enabled = false;
+			BuildSpecTextBox.SelectionStart = 0;
+			BuildSpecTextBox.SelectionLength = BuildSpecTextBox.Text.Length;
+			BuildSpecTextBox.SelectionFont = BuildSpecTextBox.Font;
+			BuildSpecTextBox.SelectionColor = BuildSpecTextBox.ForeColor;
+
+			for (int i = 0; i < text.Length; i++)
+			{
+				if (text[i] == '}')
+				{
+					formatOn = false;
+					BuildSpecTextBox.SelectionStart = formatStart;
+					BuildSpecTextBox.SelectionLength = formatLength;
+					BuildSpecTextBox.SelectionFont = formatFont;
+					BuildSpecTextBox.SelectionColor = Color.Gray;
+				}
+				if (formatOn)
+				{
+					formatLength++;
+				}
+				if (text[i] == '{')
+				{
+					formatOn = true;
+					formatStart = i + 1;
+					formatLength = 0;
+				}
+			}
+
+			BuildSpecTextBox.Enabled = true;
+			BuildSpecTextBox.Select();
+			BuildSpecTextBox.SelectionStart = selectStart;
+			BuildSpecTextBox.SelectionLength = selectLength;
+		}
+
+		private void BuildSpecTextBox_TextChanged(object sender, EventArgs e)
+		{
+			if (bFormattingEnabled)
+			{
+				FormatEditorContents();
+			}
+		}
 
 		/************************************************************************************************************
 		 *
@@ -505,6 +582,15 @@ namespace SC2Builder
 		 *	Change Build Selection (SelectedBuild)	
 		 *
 		 ************************************************************************************************************/
+		private void SelectBuild(Build selected)
+		{
+			PopulateStepList(selected);
+			PopulateBuildEditor(selected);
+
+			BuildSpecTextBox.SelectionStart = 0; // BuildSpecTextBox.Text.Length;
+
+		}
+
 		private void BuildList_SelectedIndexChanged(object sender, EventArgs e)
 		{
 			ListView.SelectedListViewItemCollection selected = BuildList.SelectedItems;
@@ -516,8 +602,7 @@ namespace SC2Builder
 					if (B.Equals(selected[0].Text))
 					{
 						this.SelectedBuild = B;
-						PopulateStepList(this.SelectedBuild);
-						PopulateBuildEditor(this.SelectedBuild);
+						SelectBuild(this.SelectedBuild);
 						break;
 					}
 				}
@@ -549,8 +634,7 @@ namespace SC2Builder
 					LoadedBuildOrders = BuildReader.ReadFromBuildDirectory();
 
 					PopulateBuildList(LoadedBuildOrders);
-					PopulateStepList(read); //we don't need to add the Build to the BuildList yet.
-					PopulateBuildEditor(read); // ^^
+					SelectBuild(read);
 
 					SelectedBuild = read;
 					ReSelectBuildInList();
@@ -637,6 +721,7 @@ namespace SC2Builder
 		{
 			InsertEditorTag("{bunker}");
 		}
+
 
 
 	}

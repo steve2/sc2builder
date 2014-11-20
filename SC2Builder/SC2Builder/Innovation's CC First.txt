@@ -1,0 +1,26 @@
+Innovation's CC-First
+Terran-Protoss
+{supply}10-{depot}Supply Depot
+{supply}14-{commandcenter}Command Center
+{supply}15-{barracks}1st Barracks
+{supply}17-{barracks}2nd Barracks
+{supply}19-{orbital}Orbital Command × 2
+{supply}19-{bunker}Bunker
+{supply}26-{depot}Supply Depot
+{supply}27-{barracks}3rd Barracks
+{supply}28-{refinery}Refinery × 2
+{gas}25-{techlab}Tech Lab on Barracks
+{time}100% Tech Lab-{stimpack}Stimpack
+{time}100% Tech Lab-{engineering}Engineering Bay
+{time}100% Tech Lab-{refinery}3rd Refinery
+{time}100% Engineering Bay-{infantryattack1}Infantry Attack +1 Upgrade
+{gas}100-{factory}Factory
+{gas}75-{reactor}Reactor on Barracks
+{gas}75-{techlab}Tech Lab on Barracks
+{gas}75-{commandcenter}3rd Command Center
+{time}100% Factory-{reactor}Reactor on Factory
+{time}100% Factory-{starport}Starport
+{time}100% Factory-{refinery}4th Refinery (Begin Marauder Production)
+{time}100% Reactor-Swap Starport/Factory for Reactor
+{time}100% +1 Infantry Attack-{infantryarmor1}Infantry Armor +1 Upgrade
+{time}100% +1 Infantry Attack-{barracks}Barracks × 2

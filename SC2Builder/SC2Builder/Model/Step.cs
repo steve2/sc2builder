@@ -22,14 +22,29 @@ namespace SC2Builder
 			this.sAction = act;
 		}
 
-		public string RawString()
+		public static List<string> GetTags(string full)
 		{
-			return sRequirement + "-" + sAction;
-		}
-
-		public override string ToString()
-		{
-			return ClearTags(this.sRequirement).Trim() + "   - " + ClearTags(this.sAction).Trim();
+			List<string> tagList = new List<string>();
+			bool inTag = false;
+			string tag = "";
+			foreach (char c in full)
+			{
+				if (c == '{')
+				{
+					tag = "";
+					inTag = true;
+				}
+				if (c == '}')
+				{
+					tagList.Add(tag.Substring(1));
+					inTag = false;
+				}
+				if (inTag)
+				{
+					tag += c;
+				}
+			}
+			return tagList;
 		}
 
 		public static string ClearTags(string orig)
@@ -40,9 +55,34 @@ namespace SC2Builder
 			{
 				if (c == '{') cpy = false;
 				if (cpy) result += c;
-				if (c == '}') cpy = true; 
+				if (c == '}') cpy = true;
 			}
 			return result;
+		}
+
+		public string Requisite()
+		{
+			return sRequirement;
+		}
+		
+		public string Command()
+		{
+			return sAction;
+		}
+
+		public string RawString()
+		{
+			return sRequirement + "-" + sAction;
+		}
+
+		public string ToNestedDisplayString()
+		{
+			return "     - " + ClearTags(this.sAction).Trim();
+		}
+
+		public string ToDisplayString()
+		{
+			return ClearTags(this.sRequirement).Trim() + " - " + ClearTags(this.sAction).Trim();
 		}
 
 	}
